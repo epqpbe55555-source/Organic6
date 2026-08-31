@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Aldehydes &amp; Ketones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14201c;
+    --bg-2:#0f1815;
+    --paper:#fbf7ee;
+    --paper-2:#f3ecdd;
+    --ink:#20261f;
+    --ink-soft:#4b5148;
+    --muted:#8fa396;
+    --yellow:#f2c230;
+    --yellow-soft:#f2c23055;
+    --blue:#5fa8d3;
+    --blue-soft:#5fa8d355;
+    --coral:#e8604c;
+    --coral-soft:#e8604c55;
+    --line: rgba(255,255,255,0.09);
+    --line-paper: rgba(32,38,31,0.12);
+    --good:#4a9d6e;
+    --bad:#d1543f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, #1c2a24 0%, transparent 45%),
+      radial-gradient(circle at 100% 100%, #182420 0%, transparent 50%),
+      var(--bg);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:20px 20px 60px;}
+
+  /* ---------- Header ---------- */
+  header.top{padding:18px 4px 22px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 6px;
+  }
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(34px,6vw,54px);
+    line-height:1.02;
+    margin:0 0 8px;
+    color:#fbf7ee;
+    letter-spacing:-.01em;
+  }
+  h1.title em{
+    font-style:italic;
+    font-weight:500;
+    background:linear-gradient(180deg, transparent 58%, var(--yellow-soft) 58%);
+  }
+  .subtitle{
+    font-size:15px;
+    color:var(--muted);
+    max-width:560px;
+    line-height:1.5;
+    margin:0;
+  }
+
+  /* ---------- Tabs (highlighter strokes) ---------- */
+  nav.tabs{
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+    padding:6px 2px 22px;
+    scrollbar-width:none;
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    position:relative;
+    flex:0 0 auto;
+    border:none;
+    cursor:pointer;
+    padding:11px 20px 10px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--paper);
+    background:rgba(255,255,255,0.045);
+    border-radius:3px 9px 3px 9px;
+    transition:transform .15s ease, background .2s ease;
+    white-space:nowrap;
+  }
+  .tab-btn .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    opacity:.6;
+    margin-right:6px;
+  }
+  .tab-btn:hover{transform:translateY(-1px);}
+  .tab-btn::before{
+    content:"";
+    position:absolute;
+    left:8px;right:8px;bottom:5px;
+    height:9px;
+    border-radius:5px;
+    opacity:0;
+    transform:scaleX(.85) rotate(-.6deg);
+    transition:opacity .2s ease, transform .2s ease;
+    z-index:-1;
+  }
+  .tab-btn[data-c="yellow"]::before{background:var(--yellow); }
+  .tab-btn[data-c="blue"]::before{background:var(--blue); }
+  .tab-btn[data-c="coral"]::before{background:var(--coral); }
+  .tab-btn[data-c="green"]::before{background:#7bbf8f; }
+  .tab-btn[data-c="lilac"]::before{background:#a690d1; }
+  .tab-btn.active{color:#1b2118; background:transparent;}
+  .tab-btn.active::before{opacity:.85; transform:scaleX(1.04) rotate(-.6deg); bottom:2px; height:15px;}
+
+  /* ---------- Panels ---------- */
+  main{position:relative;}
+  .panel{display:none; animation:fade .25s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+  .panel-head{margin-bottom:18px;}
+  .panel-head h2{
+    font-family:'Fraunces',serif;
+    font-size:28px;
+    font-weight:600;
+    margin:0 0 4px;
+    color:#fbf7ee;
+  }
+  .panel-head p{margin:0; color:var(--muted); font-size:14px; max-width:620px;}
+
+  /* ---------- Overview cards ---------- */
+  .grid-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:14px;
+  }
+  .card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:4px 16px 4px 16px;
+    padding:18px 18px 16px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.18);
+  }
+  .card h3{
+    font-family:'Fraunces',serif;
+    font-size:17px;
+    margin:0 0 10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h3 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto;}
+  .card p, .card li{font-size:13.5px; line-height:1.55; color:var(--ink-soft);}
+  .card ul{margin:0; padding-left:18px;}
+  .card ul li{margin-bottom:6px;}
+  .card table{width:100%; border-collapse:collapse; font-size:13px;}
+  .card table th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-weight:600;
+    font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); padding-bottom:6px; border-bottom:1px solid var(--line-paper);
+  }
+  .card table td{padding:7px 4px; border-bottom:1px dashed var(--line-paper); vertical-align:top;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .full-span{grid-column:1/-1;}
+
+  /* ---------- Diagrams: steppers & toggles ---------- */
+  .diagram-block{
+    background:var(--paper); color:var(--ink);
+    border-radius:4px 18px 4px 18px;
+    padding:20px 20px 18px;
+    margin-bottom:16px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.18);
+  }
+  .diagram-block h3{font-family:'Fraunces',serif; font-size:18px; margin:0 0 4px;}
+  .diagram-block .desc{font-size:13px; color:var(--ink-soft); margin:0 0 14px;}
+  .stage{
+    background:var(--paper-2);
+    border:1px dashed var(--line-paper);
+    border-radius:10px;
+    padding:18px 16px;
+    min-height:78px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .stage .eq{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(13px,2.4vw,16px);
+    line-height:1.7;
+    color:var(--ink);
+    letter-spacing:.01em;
+  }
+  .stage .eq .lbl{display:block; font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px;}
+  .note-line{
+    font-size:13px; color:var(--ink-soft); margin-top:10px; line-height:1.55; min-height:40px;
+  }
+  .stepper-controls{display:flex; align-items:center; justify-content:space-between; margin-top:12px; gap:10px;}
+  .step-dots{display:flex; gap:6px;}
+  .step-dots span{width:7px; height:7px; border-radius:50%; background:var(--line-paper); display:inline-block;}
+  .step-dots span.on{background:var(--coral);}
+  .btn{
+    border:none; cursor:pointer; font-family:'Inter',sans-serif; font-weight:600; font-size:12.5px;
+    padding:8px 14px; border-radius:20px; background:var(--ink); color:var(--paper);
+    transition:transform .12s ease, opacity .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line-paper);}
+  .btn:disabled{opacity:.35; cursor:default; transform:none;}
+
+  .toggle-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
+  .toggle-btn{
+    border:1px solid var(--line-paper); background:transparent; color:var(--ink-soft);
+    padding:7px 13px; border-radius:16px; font-size:12.5px; font-weight:600; cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .toggle-btn.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:720px){.two-col{grid-template-columns:1fr;}}
+
+  /* ---------- Mini Map ---------- */
+  .minimap-wrap{display:grid; grid-template-columns:280px 1fr; gap:16px;}
+  @media(max-width:760px){.minimap-wrap{grid-template-columns:1fr;}}
+  .minimap-list{
+    background:rgba(255,255,255,0.045);
+    border-radius:4px 18px 4px 18px;
+    padding:10px;
+    max-height:560px; overflow-y:auto;
+  }
+  .minimap-list button{
+    display:block; width:100%; text-align:left; background:transparent; border:none;
+    color:var(--paper); font-family:'Inter',sans-serif; font-size:13.5px; font-weight:500;
+    padding:10px 12px; border-radius:8px; cursor:pointer; margin-bottom:2px;
+    border-left:3px solid transparent;
+  }
+  .minimap-list button:hover{background:rgba(255,255,255,0.06);}
+  .minimap-list button.active{background:var(--paper); color:var(--ink); border-left:3px solid var(--coral); font-weight:700;}
+  .minimap-card{
+    background:var(--paper); color:var(--ink);
+    border-radius:4px 18px 4px 18px;
+    padding:24px 26px;
+    position:sticky; top:16px;
+    min-height:420px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.18);
+  }
+  .minimap-card h3{font-family:'Fraunces',serif; font-size:20px; margin:0 0 12px;}
+  .minimap-card .body p{font-size:14px; line-height:1.65; color:var(--ink-soft); margin:0 0 10px;}
+  .minimap-card .body ul{margin:0 0 10px; padding-left:18px;}
+  .minimap-card .body li{font-size:14px; line-height:1.6; color:var(--ink-soft); margin-bottom:6px;}
+  .minimap-card .placeholder{color:var(--muted); font-style:italic; font-size:14px;}
+  .minimap-card .eq{font-family:'IBM Plex Mono',monospace; background:var(--paper-2); padding:10px 12px; border-radius:8px; font-size:13px; display:block; margin:8px 0;}
+
+  /* ---------- Flashcards ---------- */
+  .flash-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+  .flash-count{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted);}
+  .flash-stage{display:flex; justify-content:center; margin-bottom:16px;}
+  .flashcard{
+    width:100%; max-width:560px; height:260px;
+    perspective:1400px; cursor:pointer;
+  }
+  .flashcard .inner{
+    position:relative; width:100%; height:100%;
+    transform-style:preserve-3d; transition:transform .5s cubic-bezier(.4,.2,.2,1);
+  }
+  .flashcard.flipped .inner{transform:rotateY(180deg);}
+  .flashcard .face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:6px 22px 6px 22px;
+    display:flex; align-items:center; justify-content:center;
+    padding:28px; text-align:center;
+    box-shadow:0 14px 30px rgba(0,0,0,0.22);
+  }
+  .flashcard .front{background:var(--paper); color:var(--ink);}
+  .flashcard .back{background:#232f28; color:var(--paper); transform:rotateY(180deg);}
+  .flashcard .face span.k{
+    position:absolute; top:14px; left:16px; font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; opacity:.5;
+  }
+  .flashcard .face p{font-family:'Fraunces',serif; font-size:19px; line-height:1.4; margin:0; font-weight:500;}
+  .flash-controls{display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
+
+  /* ---------- Quiz ---------- */
+  .quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
+  .quiz-score{font-family:'IBM Plex Mono',monospace; font-size:13px; background:rgba(255,255,255,0.06); padding:7px 13px; border-radius:16px;}
+  .quiz-list{display:flex; flex-direction:column; gap:12px;}
+  .qcard{
+    background:var(--paper); color:var(--ink);
+    border-radius:4px 18px 4px 18px; padding:18px 18px 16px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.16);
+  }
+  .qcard .qn{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:6px;}
+  .qcard .qtext{font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin:0 0 12px; line-height:1.4;}
+  .qcard .choices{display:flex; flex-direction:column; gap:8px;}
+  .qcard .choice{
+    text-align:left; border:1px solid var(--line-paper); background:transparent;
+    padding:10px 12px; border-radius:9px; font-size:13.5px; cursor:pointer; color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .qcard .choice:hover{background:var(--paper-2);}
+  .qcard .choice.correct{background:#e4f3ea; border-color:var(--good); color:#1f5c37; font-weight:600;}
+  .qcard .choice.wrong{background:#fbe9e6; border-color:var(--bad); color:#8a2d1e; font-weight:600;}
+  .qcard .choice:disabled{cursor:default;}
+  .quiz-footer{display:flex; justify-content:center; margin-top:20px;}
+
+  footer.site{
+    text-align:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:12px; font-family:'IBM Plex Mono',monospace; letter-spacing:.03em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <p class="eyebrow">Aldehydes &amp; Ketones · Nucleophilic Addition</p>
+    <h1 class="title">Study <em>Smart</em></h1>
+    <p class="subtitle">Every rule, reaction, and reagent from the carbonyl chapter, organized into five focused stops — no long lecture, just what you need to know.</p>
+  </header>
+
+  <nav class="tabs" id="tabNav">
+    <button class="tab-btn active" data-c="yellow" data-target="overview"><span class="num">01</span>Overview</button>
+    <button class="tab-btn" data-c="blue" data-target="diagrams"><span class="num">02</span>Diagrams</button>
+    <button class="tab-btn" data-c="coral" data-target="minimap"><span class="num">03</span>Mini Map</button>
+    <button class="tab-btn" data-c="green" data-target="flashcards"><span class="num">04</span>Flash Cards</button>
+    <button class="tab-btn" data-c="lilac" data-target="quiz"><span class="num">05</span>Quiz Bank</button>
+  </nav>
+
+  <main>
+
+    <!-- ============ 1. OVERVIEW ============ -->
+    <section class="panel active" id="overview">
+      <div class="panel-head">
+        <h2>Overview</h2>
+        <p>The rules and facts that actually get tested — nothing else.</p>
+      </div>
+      <div class="grid-cards">
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--yellow)"></span>Core definitions</h3>
+          <ul>
+            <li><span class="mono">Aldehyde = RCHO</span> — one H on the carbonyl carbon.</li>
+            <li><span class="mono">Ketone = RR′CO</span> — two organic groups on the carbonyl carbon.</li>
+            <li>Both share the <strong>carbonyl group, C=O</strong>, which governs their chemistry.</li>
+            <li>R and R′ may be aliphatic or aromatic.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--coral)"></span>Key differences</h3>
+          <ul>
+            <li><strong>Oxidation:</strong> aldehydes oxidize easily; ketones resist oxidation.</li>
+            <li><strong>Nucleophilic addition:</strong> aldehydes are usually more reactive than ketones (less steric hindrance, less electron donation).</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--blue)"></span>Nomenclature rules</h3>
+          <ul>
+            <li>Common aldehyde names ← carboxylic acid name, <span class="mono">-ic acid → -aldehyde</span>.</li>
+            <li>IUPAC aldehyde: <span class="mono">-e → -al</span>; carbonyl carbon is always C-1.</li>
+            <li>C-2 (IUPAC) = alpha carbon (common name system).</li>
+            <li>Simplest ketone: <strong>acetone</strong>. Otherwise: two group names + "ketone".</li>
+            <li>Aryl-carbonyl ketone → suffix <strong>"-phenone"</strong>.</li>
+            <li>IUPAC ketone: <span class="mono">-e → -one</span>; carbonyl gets the lowest possible number.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:#7bbf8f"></span>Physical properties</h3>
+          <ul>
+            <li>Polar C=O → higher boiling points than non-polar compounds of similar mass.</li>
+            <li>No O–H/N–H for self hydrogen-bonding → lower b.p. than comparable alcohols/acids.</li>
+            <li>Lower members (≤ ~5 carbons) are water-soluble via H-bonding with water.</li>
+            <li>All are soluble in the usual organic solvents.</li>
+          </ul>
+        </div>
+
+        <div class="card full-span">
+          <h3><span class="dot" style="background:var(--yellow)"></span>Preparation methods, at a glance</h3>
+          <table>
+            <tr><th>Method</th><th>Substrate</th><th>Reagent</th><th>Gives</th></tr>
+            <tr><td>Oxidation</td><td>1° alcohol</td><td class="mono">PCC</td><td>Aldehyde</td></tr>
+            <tr><td>Oxidation</td><td>2° alcohol</td><td class="mono">KMnO4 or K2Cr2O7</td><td>Ketone</td></tr>
+            <tr><td>Friedel–Crafts acylation</td><td>Arene</td><td class="mono">RCOCl / AlCl3</td><td>Aryl ketone</td></tr>
+            <tr><td>Alkyne hydration</td><td>Terminal alkyne</td><td class="mono">H+, H2O, Hg2+</td><td>Methyl ketone</td></tr>
+            <tr><td>Organocadmium route</td><td>Acid chloride</td><td class="mono">R2Cd (from RMgX + CdCl2)</td><td>Ketone (clean, no over-addition)</td></tr>
+            <tr><td>Aromatic ring (special)</td><td>Phenol</td><td class="mono">Reimer–Tiemann</td><td>Phenolic aldehyde</td></tr>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--coral)"></span>Reducing agents</h3>
+          <ul>
+            <li><span class="mono">LiAlH4</span> and <span class="mono">NaBH4</span> give the <em>same</em> product.</li>
+            <li>Aldehyde + [H] → <strong>1° alcohol</strong></li>
+            <li>Ketone + [H] → <strong>2° alcohol</strong></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--blue)"></span>Grignard outcomes</h3>
+          <ul>
+            <li>Formaldehyde + RMgX → <strong>1° alcohol</strong></li>
+            <li>Other aldehyde + RMgX → <strong>2° alcohol</strong></li>
+            <li>Ketone + RMgX → <strong>3° alcohol</strong></li>
+            <li>Acid chlorides + RMgX overreact → also 3° alcohol (that's why organocadmium is used for clean ketone synthesis).</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:#7bbf8f"></span>Oxidation &amp; the Tollens' test</h3>
+          <ul>
+            <li>Aldehyde, acidic conditions → <strong>carboxylic acid</strong>.</li>
+            <li>Aldehyde, alkaline conditions → <strong>carboxylate salt</strong>.</li>
+            <li>Ketones do not oxidize this way (no H on carbonyl carbon).</li>
+            <li>Tollens' reagent (Ag(NH3)2+) → silver mirror <em>only</em> with aldehydes.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--yellow)"></span>Carbon-nucleophile reactions</h3>
+          <ul>
+            <li><strong>Aldol condensation:</strong> enolate + carbonyl → β-hydroxy aldehyde ("aldol"). One carbon always separates the aldehyde and alcohol carbons.</li>
+            <li><strong>Claisen condensation:</strong> ester enolate + ester → β-ketoester (driven by the product's acidic α-H).</li>
+            <li><strong>Cannizzaro:</strong> aldehydes with <em>no</em> α-H, in strong base → alcohol + carboxylate salt.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot" style="background:var(--coral)"></span>Addition–elimination products</h3>
+          <table>
+            <tr><th>Nitrogen reagent</th><th>Product</th></tr>
+            <tr><td>Hydrazine</td><td>Hydrazone</td></tr>
+            <tr><td>Phenylhydrazine</td><td>Phenylhydrazone</td></tr>
+            <tr><td>2,4-Dinitrophenylhydrazine</td><td>2,4-DNP hydrazone</td></tr>
+            <tr><td>Hydroxylamine</td><td>Oxime</td></tr>
+            <tr><td>Semicarbazide</td><td>Semicarbazone</td></tr>
+            <tr><td>NH3 / 1° amine</td><td>Imine (Schiff base)</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ 2. DIAGRAMS ============ -->
+    <section class="panel" id="diagrams">
+      <div class="panel-head">
+        <h2>Diagrams</h2>
+        <p>Click through each mechanism step by step, or toggle a substrate to see what changes.</p>
+      </div>
+
+      <div id="stepperMount"></div>
+
+      <div class="two-col">
+        <div class="diagram-block" id="toggle-grignard">
+          <h3>Grignard addition — outcome by substrate</h3>
+          <p class="desc">Pick the carbonyl partner to see which class of alcohol forms.</p>
+          <div class="toggle-row" data-group="grignard">
+            <button class="toggle-btn active" data-val="0">Formaldehyde</button>
+            <button class="toggle-btn" data-val="1">Other aldehyde</button>
+            <button class="toggle-btn" data-val="2">Ketone</button>
+          </div>
+          <div class="stage"><div class="eq" id="grignard-eq"></div></div>
+          <div class="note-line" id="grignard-note"></div>
+        </div>
+
+        <div class="diagram-block" id="toggle-reduction">
+          <h3>Hydride reduction — outcome by substrate</h3>
+          <p class="desc">LiAlH4 and NaBH4 both give the same product for a given substrate.</p>
+          <div class="toggle-row" data-group="reduction">
+            <button class="toggle-btn active" data-val="0">Aldehyde</button>
+            <button class="toggle-btn" data-val="1">Ketone</button>
+          </div>
+          <div class="stage"><div class="eq" id="reduction-eq"></div></div>
+          <div class="note-line" id="reduction-note"></div>
+        </div>
+
+        <div class="diagram-block" id="toggle-oxidation">
+          <h3>Oxidation pathway &amp; Tollens' test</h3>
+          <p class="desc">Toggle condition and substrate.</p>
+          <div class="toggle-row" data-group="oxcond">
+            <button class="toggle-btn active" data-val="0">Acidic</button>
+            <button class="toggle-btn" data-val="1">Alkaline</button>
+            <button class="toggle-btn" data-val="2">Tollens' — aldehyde</button>
+            <button class="toggle-btn" data-val="3">Tollens' — ketone</button>
+          </div>
+          <div class="stage"><div class="eq" id="oxidation-eq"></div></div>
+          <div class="note-line" id="oxidation-note"></div>
+        </div>
+
+        <div class="diagram-block" id="toggle-cyanohydrin">
+          <h3>Cyanohydrin formation — pick a substrate</h3>
+          <p class="desc">HCN adds across the carbonyl (base catalyst, e.g. KOH).</p>
+          <div class="toggle-row" data-group="cyano">
+            <button class="toggle-btn active" data-val="0">Acetaldehyde</button>
+            <button class="toggle-btn" data-val="1">Acetone</button>
+            <button class="toggle-btn" data-val="2">Cyclohexanone</button>
+            <button class="toggle-btn" data-val="3">Benzaldehyde</button>
+          </div>
+          <div class="stage"><div class="eq" id="cyano-eq"></div></div>
+          <div class="note-line" id="cyano-note"></div>
+        </div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>Nitrogen derivatives — click a reagent</h3>
+        <p class="desc">All follow the same pattern: R2C=O + H2N–X ⇌ R2C=N–X + H2O</p>
+        <div class="toggle-row" data-group="deriv">
+          <button class="toggle-btn active" data-val="0">Hydrazine</button>
+          <button class="toggle-btn" data-val="1">Phenylhydrazine</button>
+          <button class="toggle-btn" data-val="2">2,4-DNP hydrazine</button>
+          <button class="toggle-btn" data-val="3">Hydroxylamine</button>
+          <button class="toggle-btn" data-val="4">Semicarbazide</button>
+          <button class="toggle-btn" data-val="5">1° amine</button>
+        </div>
+        <div class="stage"><div class="eq" id="deriv-eq"></div></div>
+        <div class="note-line" id="deriv-note"></div>
+      </div>
+
+      <div class="diagram-block">
+        <h3>Nomenclature table — common vs IUPAC</h3>
+        <p class="desc">Same molecule, two naming systems. Toggle to compare.</p>
+        <div class="toggle-row" data-group="nametab">
+          <button class="toggle-btn active" data-val="0">Common names</button>
+          <button class="toggle-btn" data-val="1">IUPAC names</button>
+        </div>
+        <table style="width:100%; border-collapse:collapse; background:var(--paper); color:var(--ink); border-radius:8px; overflow:hidden;">
+          <thead><tr style="background:var(--paper-2);"><th style="text-align:left; padding:8px 10px; font-size:11px; text-transform:uppercase; letter-spacing:.04em;">Structure</th><th style="text-align:left; padding:8px 10px; font-size:11px; text-transform:uppercase; letter-spacing:.04em;" id="nametab-head">Name</th></tr></thead>
+          <tbody id="nametab-body" style="font-size:13.5px;"></tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ============ 3. MINI MAP ============ -->
+    <section class="panel" id="minimap">
+      <div class="panel-head">
+        <h2>Mini Map</h2>
+        <p>Tap a topic on the left — the full explanation opens here on the right.</p>
+      </div>
+      <div class="minimap-wrap">
+        <div class="minimap-list" id="minimapList"></div>
+        <div class="minimap-card">
+          <div id="minimapContent">
+            <h3>Pick a topic</h3>
+            <div class="body"><p class="placeholder">Tap any title on the left to load it here.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. FLASHCARDS ============ -->
+    <section class="panel" id="flashcards">
+      <div class="panel-head">
+        <h2>Flash Cards</h2>
+        <p>Tap a card to flip it. Covers definitions, mechanisms, and reagent → product facts.</p>
+      </div>
+      <div class="flash-top">
+        <span class="flash-count" id="flashCount">Card 1 / 1</span>
+        <button class="btn ghost" id="flashShuffle">Shuffle deck</button>
+      </div>
+      <div class="flash-stage">
+        <div class="flashcard" id="flashcard">
+          <div class="inner">
+            <div class="face front"><span class="k">Term</span><p id="flashFront"></p></div>
+            <div class="face back"><span class="k">Answer</span><p id="flashBack"></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="flash-controls">
+        <button class="btn ghost" id="flashPrev">← Previous</button>
+        <button class="btn" id="flashFlip">Flip card</button>
+        <button class="btn ghost" id="flashNext">Next →</button>
+      </div>
+    </section>
+
+    <!-- ============ 5. QUIZ BANK ============ -->
+    <section class="panel" id="quiz">
+      <div class="panel-head">
+        <h2>Quiz Bank</h2>
+        <p>36 questions across every topic. Answer choices are reshuffled on every attempt.</p>
+      </div>
+      <div class="quiz-top">
+        <span class="quiz-score" id="quizScore">Score: 0 / 0</span>
+        <button class="btn ghost" id="quizRestart">Restart quiz</button>
+      </div>
+      <div class="quiz-list" id="quizList"></div>
+      <div class="quiz-footer">
+        <button class="btn ghost" id="quizRestart2">Restart quiz</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site">© Anmar Taha — Study Smart</footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------
+   Utility
+--------------------------------------------------------- */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+/* ---------------------------------------------------------
+   Tabs
+--------------------------------------------------------- */
+const tabBtns = document.querySelectorAll('.tab-btn');
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(btn.dataset.target).classList.add('active');
+  });
+});
+
+/* ---------------------------------------------------------
+   Generic stepper component
+--------------------------------------------------------- */
+function makeStepper(title, desc, steps){
+  const wrap = document.createElement('div');
+  wrap.className = 'diagram-block';
+  const dots = steps.map((_,i)=>`<span class="${i===0?'on':''}"></span>`).join('');
+  wrap.innerHTML = `
+    <h3>${title}</h3>
+    <p class="desc">${desc}</p>
+    <div class="stage"><div class="eq"></div></div>
+    <div class="note-line"></div>
+    <div class="stepper-controls">
+      <button class="btn ghost prev">← Prev</button>
+      <div class="step-dots">${dots}</div>
+      <button class="btn next">Next →</button>
+    </div>
+  `;
+  let idx = 0;
+  const eqEl = wrap.querySelector('.eq');
+  const noteEl = wrap.querySelector('.note-line');
+  const dotEls = wrap.querySelectorAll('.step-dots span');
+  const prevBtn = wrap.querySelector('.prev');
+  const nextBtn = wrap.querySelector('.next');
+  function render(){
+    eqEl.innerHTML = steps[idx].eq + `<span class="lbl">Step ${idx+1} of ${steps.length}</span>`;
+    noteEl.textContent = steps[idx].note;
+    dotEls.forEach((d,i)=>d.classList.toggle('on', i===idx));
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===steps.length-1;
+    nextBtn.textContent = idx===steps.length-1 ? 'Done' : 'Next →';
+  }
+  prevBtn.addEventListener('click', ()=>{ if(idx>0){idx--; render();} });
+  nextBtn.addEventListener('click', ()=>{ if(idx<steps.length-1){idx++; render();} });
+  render();
+  return wrap;
+}
+
+const mount = document.getElementById('stepperMount');
+
+mount.appendChild(makeStepper(
+  'Nucleophilic addition — the general mechanism',
+  'The reaction that defines carbonyl chemistry.',
+  [
+    {eq:'R₂C=O <span style="color:#8fa396">(trigonal, sp²)</span>', note:'The carbonyl carbon starts trigonal planar and sp²-hybridized. Its resonance/polarization (C=O ↔ C⁺–O⁻) makes the carbon δ+ and open to attack.'},
+    {eq:'Nu⁻ + R₂C=O → R₂C(Nu)–O⁻', note:'A nucleophile attacks the electrophilic carbonyl carbon, pushing the π electrons onto oxygen.'},
+    {eq:'R₂C(Nu)–O⁻ <span style="color:#8fa396">(tetrahedral intermediate, sp³)</span>', note:'The carbon is now tetrahedral and sp³-hybridized — this alkoxide intermediate is the key species of every addition.'},
+    {eq:'R₂C(Nu)–O⁻ + H₂O → R₂C(Nu)–OH', note:'Protonation (e.g. by water or acid) gives the neutral tetrahedral product.'}
+  ]
+));
+
+mount.appendChild(makeStepper(
+  'Acid-catalyzed addition',
+  'Acid makes weak nucleophiles reactive enough to add.',
+  [
+    {eq:'R₂C=O: + H⁺ ⇌ R₂C=O⁺–H', note:'The carbonyl oxygen — a weak Lewis base — is protonated.'},
+    {eq:'R₂C=O⁺–H ↔ R₂C⁺–OH', note:'Resonance places positive charge on carbon: a resonance-stabilized carbocation, now strongly electrophilic.'},
+    {eq:'R₂C⁺–OH + Nu⁻ → R₂C(Nu)–OH', note:'Even a weak nucleophile can now attack the carbon, completing the addition.'}
+  ]
+));
+
+mount.appendChild(makeStepper(
+  'Aldol condensation — mechanism',
+  'Two acetaldehyde molecules combine, catalyzed by base.',
+  [
+    {eq:'CH₃CHO + OH⁻ ⇌ [CH₂=CH–O⁻] + H₂O', note:'Step 1: base removes an α-hydrogen, forming the resonance-stabilized enolate anion.'},
+    {eq:'CH₃CHO + ⁻CH₂CHO → CH₃CH(O⁻)CH₂CHO', note:'Step 2: the enolate (as carbon nucleophile) attacks the carbonyl carbon of a second acetaldehyde, forming a new C–C bond → an alkoxide ion.'},
+    {eq:'…CH(O⁻)… + H₂O → …CH(OH)… + OH⁻', note:'Step 3: the alkoxide takes a proton from solvent, giving the aldol (3-hydroxybutanal) and regenerating hydroxide.'}
+  ]
+));
+
+mount.appendChild(makeStepper(
+  'Claisen condensation — mechanism',
+  'Ethyl acetate + NaOEt → ethyl acetoacetate (a β-ketoester).',
+  [
+    {eq:'EtO⁻ + CH₃COOEt ⇌ ⁻CH₂COOEt + EtOH', note:'Step 1: ethoxide removes an α-hydrogen from ethyl acetate, forming the ester enolate.'},
+    {eq:'CH₃COOEt + ⁻CH₂COOEt → tetrahedral alkoxide', note:'Step 2: the enolate adds to the carbonyl carbon of a second, neutral ester molecule.'},
+    {eq:'tetrahedral alkoxide → CH₃COCH₂COOEt + EtO⁻', note:'Step 3: the tetrahedral intermediate collapses, ejecting ethoxide as the leaving group and giving ethyl 3-oxobutanoate.'},
+    {eq:'CH₃COCH₂COOEt + EtO⁻ → enolate + EtOH', note:'Step 4: the very acidic α-H of the β-ketoester (flanked by two carbonyls) is removed by ethoxide — this deprotonation is what pulls the whole equilibrium to completion.'},
+    {eq:'enolate + H₃O⁺ → CH₃COCH₂COOEt', note:'Step 5: acidic work-up reprotonates the enolate, delivering the neutral β-ketoester product.'}
+  ]
+));
+
+mount.appendChild(makeStepper(
+  'Friedel–Crafts acylation — mechanism',
+  'Benzene + CH₃COCl / AlCl₃ → acetophenone.',
+  [
+    {eq:'RCOCl + AlCl₃ → RC≡O⁺ + AlCl₄⁻', note:'Step 1: AlCl₃ helps the acid chloride ionize, forming an acylium ion.'},
+    {eq:'ArH + RC≡O⁺ → [ArH(COR)]⁺', note:'Step 2: the arene attacks the acylium ion, forming a resonance-stabilized arenium (Wheland) intermediate.'},
+    {eq:'[ArH(COR)]⁺ + AlCl₄⁻ → ArCOR + HCl + AlCl₃', note:'Step 3: loss of a proton restores aromaticity, giving the aryl ketone and regenerating the AlCl₃ catalyst.'}
+  ]
+));
+
+mount.appendChild(makeStepper(
+  'Hemiacetal → acetal formation',
+  'Alcohols add to carbonyls in two stages.',
+  [
+    {eq:'R′CHO + ROH ⇌ R′CH(OH)(OR)', note:'One equivalent of alcohol adds (acid-catalyzed) to give a hemiacetal — OH and OR on the same carbon.'},
+    {eq:'R′CH(OH)(OR) + R″OH ⇌ R′CH(OR)(OR″) + H₂O', note:'With excess alcohol, the hemiacetal reacts further, losing water to form the acetal (two OR groups on that carbon).'},
+    {eq:'Example: PhCHO + 2 EtOH → PhCH(OEt)₂', note:'Benzaldehyde + excess ethanol (dry HCl) gives benzaldehyde diethyl acetal. Sugars like glucose form this bond intramolecularly, giving a cyclic hemiacetal.'}
+  ]
+));
+
+/* ---------------------------------------------------------
+   Toggle groups (data-driven)
+--------------------------------------------------------- */
+function wireToggle(groupName, dataArr, eqId, noteId){
+  const buttons = document.querySelectorAll(`[data-group="${groupName}"] .toggle-btn`);
+  function set(i){
+    buttons.forEach(b=>b.classList.toggle('active', b.dataset.val==i));
+    document.getElementById(eqId).innerHTML = dataArr[i].eq;
+    document.getElementById(noteId).textContent = dataArr[i].note;
+  }
+  buttons.forEach(b=>b.addEventListener('click', ()=>set(+b.dataset.val)));
+  set(0);
+}
+
+wireToggle('grignard', [
+  {eq:'HCHO —1) EtMgBr, 2) H₃O⁺→ CH₃CH₂CH₂OH', note:'Formaldehyde + Grignard reagent → primary alcohol (1-propanol shown).'},
+  {eq:'CH₃CHO —1) EtMgBr, 2) H₃O⁺→ 2° alcohol', note:'Any other aldehyde + Grignard reagent → secondary alcohol.'},
+  {eq:'(CH₃)₂CO —1) EtMgBr, 2) H₃O⁺→ (CH₃)(Et)C(OH)CH₃', note:'A ketone + Grignard reagent → tertiary alcohol (2-methyl-2-butanol shown, from acetone).'}
+], 'grignard-eq', 'grignard-note');
+
+wireToggle('reduction', [
+  {eq:'CH₃CHO + 2[H] → CH₃CH₂OH', note:'Aldehyde + LiAlH4 or NaBH4 → primary alcohol (ethanal → ethanol).'},
+  {eq:'(CH₃)₂C=O + 2[H] → (CH₃)₂CHOH', note:'Ketone + LiAlH4 or NaBH4 → secondary alcohol (propanone → 2-propanol).'}
+], 'reduction-eq', 'reduction-note');
+
+wireToggle('oxcond', [
+  {eq:'RCHO —[O], H⁺→ RCOOH', note:'Acidic oxidation of an aldehyde gives a carboxylic acid.'},
+  {eq:'RCHO —[O], OH⁻→ RCOO⁻', note:'Alkaline oxidation of an aldehyde gives the carboxylate salt.'},
+  {eq:'RCHO + 2Ag(NH₃)₂⁺ + 3OH⁻ → RCOO⁻ + 2Ag↓ + 4NH₃ + 2H₂O', note:'Tollens\' test: aldehydes reduce the colorless silver–ammonia complex to a silver mirror.'},
+  {eq:'RR′C=O + Ag(NH₃)₂⁺ → no reaction', note:'Ketones have no H on the carbonyl carbon, so they cannot reduce Tollens\' reagent — no mirror forms. This is how the test distinguishes them.'}
+], 'oxidation-eq', 'oxidation-note');
+
+wireToggle('cyano', [
+  {eq:'CH₃CHO + HCN —KOH→ CH₃CH(OH)CN', note:'Acetaldehyde → 2-hydroxypropanenitrile (acetaldehyde cyanohydrin).'},
+  {eq:'(CH₃)₂CO + HCN —KOH→ (CH₃)₂C(OH)CN', note:'Acetone → 2-hydroxy-2-methylpropanenitrile (acetone cyanohydrin).'},
+  {eq:'Cyclohexanone + HCN —KOH→ 1-hydroxycyclohexane-1-carbonitrile', note:'Cyclic ketone gives the corresponding ring cyanohydrin.'},
+  {eq:'PhCHO + HCN —KOH→ PhCH(OH)CN', note:'Benzaldehyde → 2-hydroxy-2-phenylacetonitrile (benzaldehyde cyanohydrin / mandelonitrile).'}
+], 'cyano-eq', 'cyano-note');
+
+wireToggle('deriv', [
+  {eq:'R₂C=O + H₂N–NH₂ → R₂C=N–NH₂ + H₂O', note:'Carbonyl + hydrazine → hydrazone. Example: acetone → acetone hydrazone.'},
+  {eq:'R₂C=O + H₂N–NHPh → R₂C=N–NHPh + H₂O', note:'Carbonyl + phenylhydrazine → phenylhydrazone. Example: benzaldehyde → benzaldehyde phenylhydrazone.'},
+  {eq:'R₂C=O + 2,4-(O₂N)₂C₆H₃NHNH₂ → 2,4-DNP hydrazone + H₂O', note:'The classic solid derivative used to identify an unknown aldehyde or ketone by melting point.'},
+  {eq:'R₂C=O + H₂N–OH → R₂C=N–OH + H₂O', note:'Carbonyl + hydroxylamine → oxime. Example: ethanal → ethanal oxime.'},
+  {eq:'R₂C=O + H₂NNHCONH₂ → R₂C=N–NHCONH₂ + H₂O', note:'Carbonyl + semicarbazide → semicarbazone. Example: cyclopentanone → cyclopentanone semicarbazone.'},
+  {eq:'R₂C=O + R″NH₂ → R₂C=N–R″ + H₂O', note:'Carbonyl + ammonia or a primary amine → imine (a Schiff base, C=N).'}
+], 'deriv-eq', 'deriv-note');
+
+/* Nomenclature table */
+const nameRows = [
+  {struct:'H–CHO', common:'Formaldehyde', iupac:'Methanal'},
+  {struct:'CH₃CHO', common:'Acetaldehyde', iupac:'Ethanal'},
+  {struct:'CH₃CH₂CHO', common:'Propionaldehyde', iupac:'Propanal'},
+  {struct:'CH₃CH₂CH₂CHO', common:'n-Butyraldehyde', iupac:'Butanal'},
+  {struct:'C₆H₅CHO', common:'Benzaldehyde', iupac:'Benzaldehyde'},
+  {struct:'p-O₂N-C₆H₄CHO', common:'p-Nitrobenzaldehyde', iupac:'p-Nitrobenzaldehyde'},
+  {struct:'2-HO-C₆H₄CHO', common:'Salicylaldehyde', iupac:'o-Hydroxybenzaldehyde'},
+  {struct:'C₆H₅CH₂CHO', common:'Phenylacetaldehyde', iupac:'Phenylethanal'},
+  {struct:'CH₃CH₂CH(CH₃)CHO', common:'α-Methylvaleraldehyde', iupac:'2-Methylpentanal'},
+  {struct:'CH₃CH₂CH(CH₃)CH₂CHO', common:'β-Methylvaleraldehyde', iupac:'3-Methylpentanal'},
+  {struct:'CH₃CH(CH₃)CH₂CH₂CHO', common:'Isocaproaldehyde / γ-Methylvaleraldehyde', iupac:'4-Methylpentanal'},
+  {struct:'CH₃COCH₃', common:'Acetone', iupac:'Propanone'},
+  {struct:'CH₃CH₂COCH₃', common:'Methyl ethyl ketone', iupac:'Butanone'},
+  {struct:'CH₃CH₂CH₂COCH₃', common:'Methyl n-propyl ketone', iupac:'2-Pentanone'},
+  {struct:'CH₃CH₂COCH₂CH₃', common:'Ethyl ketone', iupac:'3-Pentanone'},
+  {struct:'C₆H₅COCH₃', common:'Acetophenone', iupac:'1-Phenylethan-1-one'},
+  {struct:'C₆H₅COC₆H₅', common:'Benzophenone', iupac:'Diphenylmethanone'}
+];
+function renderNameTable(mode){
+  const body = document.getElementById('nametab-body');
+  document.getElementById('nametab-head').textContent = mode===0 ? 'Common name' : 'IUPAC name';
+  body.innerHTML = nameRows.map(r=>`
+    <tr>
+      <td style="padding:7px 10px; border-top:1px solid var(--line-paper); font-family:'IBM Plex Mono',monospace;">${r.struct}</td>
+      <td style="padding:7px 10px; border-top:1px solid var(--line-paper);">${mode===0?r.common:r.iupac}</td>
+    </tr>`).join('');
+}
+document.querySelectorAll('[data-group="nametab"] .toggle-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-group="nametab"] .toggle-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderNameTable(+b.dataset.val);
+  });
+});
+renderNameTable(0);
+
+/* ---------------------------------------------------------
+   Mini map
+--------------------------------------------------------- */
+const minimapTopics = [
+  {t:'Structure of aldehydes &amp; ketones', html:`<p>Aldehydes are <span class="mono">RCHO</span>; ketones are <span class="mono">RR′CO</span>. Both contain the carbonyl group, C=O, which largely determines their chemistry.</p><p>The difference: aldehydes carry one H directly on the carbonyl carbon, while ketones carry two organic groups. This affects reactivity in two ways: (a) aldehydes oxidize more easily; (b) aldehydes are usually more reactive toward nucleophilic addition.</p>`},
+  {t:'Nomenclature of aldehydes', html:`<p>Common names come from the corresponding carboxylic acid, replacing <em>-ic acid</em> with <em>-aldehyde</em>.</p><p>IUPAC names replace the <em>-e</em> of the parent alkane with <em>-al</em>. The longest chain containing the CHO group is the parent, and the carbonyl carbon is always C-1. Note that C-2 in the IUPAC system corresponds to the "alpha" carbon in the common-name system.</p>`},
+  {t:'Nomenclature of ketones', html:`<p>The simplest aliphatic ketone is called <strong>acetone</strong>. Other aliphatic ketones are named by naming both groups attached to the carbonyl carbon, followed by the word "ketone".</p><p>A ketone with the carbonyl attached directly to a benzene ring is named as a "phenone" (e.g. acetophenone, benzophenone).</p><p>IUPAC: replace the alkane's <em>-e</em> with <em>-one</em>; the carbonyl carbon gets the lowest possible number.</p>`},
+  {t:'Physical properties', html:`<p>The polar carbonyl group gives aldehydes and ketones higher boiling points than non-polar compounds of similar molecular weight.</p><p>However, since their only hydrogens are bonded to carbon (not O or N), they cannot hydrogen-bond with each other — so their boiling points are lower than comparable alcohols or carboxylic acids.</p><p>Lower members are appreciably water-soluble (hydrogen bonding with water), with borderline solubility reached around five carbons. All are soluble in common organic solvents.</p>`},
+  {t:'Preparation — oxidation of alcohols', html:`<p>Primary alcohols give aldehydes with <strong>PCC</strong> (pyridinium chlorochromate) — mild enough to stop at the aldehyde.</p><p>Secondary alcohols give ketones with <strong>KMnO4</strong> or <strong>K2Cr2O7</strong>.</p><span class="eq">1-butanol (b.p. 118°C) —PCC→ butanal (b.p. 76°C)</span><span class="eq">Menthol —K2Cr2O7/H2SO4→ 2-isopropyl-5-methylcyclohexan-1-one</span>`},
+  {t:'Preparation — Friedel–Crafts acylation', html:`<p>Aromatic ketones with the carbonyl attached directly to the ring are conveniently made by Friedel–Crafts acylation: arene + acid chloride, catalyzed by AlCl3.</p><p>Mechanism: (1) RCOCl + AlCl3 → acylium ion (RC≡O⁺) + AlCl4⁻; (2) the arene attacks the acylium ion, forming an arenium intermediate; (3) loss of H⁺ restores aromaticity and regenerates AlCl3.</p>`},
+  {t:'Preparation — from alkynes', html:`<p>Acid-catalyzed hydration of a terminal alkyne, with Hg²⁺ as catalyst, follows Markovnikov's rule and gives a <strong>methyl ketone</strong>.</p><span class="eq">1-octyne —H⁺, H2O, Hg2+→ 2-octanone</span>`},
+  {t:'Preparation — organocadmium route', html:`<p>Grignard reagents react readily with acid chlorides, but usually overreact to give tertiary alcohols (the initially formed ketone reacts with more Grignard reagent).</p><p>To avoid this, Grignard reagents are first converted to organocadmium compounds (using dry CdCl2). These are milder and react with acid chlorides to stop cleanly at the ketone.</p><p>Only aryl or primary alkyl organocadmium compounds are stable enough to use.</p>`},
+  {t:'Nucleophilic addition — overview', html:`<p>The carbonyl group governs the chemistry of aldehydes and ketones in two ways: (a) it provides a site for nucleophilic addition; (b) it increases the acidity of hydrogens on the alpha carbon.</p><p>Resonance (C=O ↔ C⁺–O⁻) polarizes the carbonyl, making the carbon δ+ (attacked by nucleophiles) and the oxygen δ- (may be protonated).</p><p>Mechanism: the trigonal, sp²  carbonyl carbon becomes a tetrahedral, sp³ carbon in the addition product. Acids can catalyze addition of weak nucleophiles by protonating the carbonyl oxygen, generating a resonance-stabilized carbocation that is much more electrophilic.</p>`},
+  {t:'Hydration &amp; hemiacetal formation', html:`<p>Water adds rapidly to carbonyls, but the resulting hydrate (gem-diol) is usually too unstable to isolate.</p><p>Exceptions: formaldehyde (its aqueous solution, "formalin", exists almost entirely as the hydrate) and chloral (chloral hydrate is stable, stabilized by the electron-withdrawing CCl3 group).</p><p>Alcohols add the same way to give a <strong>hemiacetal</strong> (OH and OR on the same carbon), acid-catalyzed.</p>`},
+  {t:'Acetal formation', html:`<p>In the presence of excess alcohol, a hemiacetal reacts further (acid-catalyzed) to form an <strong>acetal</strong>, losing water.</p><span class="eq">Benzaldehyde + 2 EtOH —dry HCl→ benzaldehyde diethyl acetal</span><p>Cyclic hemiacetals form intramolecularly, e.g. 5-hydroxypentanal cyclizes to a six-membered ring hemiacetal — this is exactly how glucose exists mainly as β-D-glucopyranose. Acetone + ethylene glycol (H⁺) gives a cyclic acetal.</p>`},
+  {t:'Cyanohydrin formation', html:`<p>HCN adds reversibly to the carbonyl of aldehydes and ketones (base catalyst, e.g. KOH) to give a <strong>cyanohydrin</strong> — OH and CN on the same carbon.</p><p>Examples: acetaldehyde → 2-hydroxypropanenitrile; acetone → 2-hydroxy-2-methylpropanenitrile; cyclohexanone → 1-hydroxycyclohexane-1-carbonitrile; benzaldehyde → 2-hydroxy-2-phenylacetonitrile.</p>`},
+  {t:'Cannizzaro reaction', html:`<p>Aldehydes that lack an alpha-hydrogen, in concentrated alkali, undergo self-oxidation-reduction: one molecule is reduced to an alcohol while another is oxidized to a carboxylate salt.</p><span class="eq">2 · 4-nitrobenzaldehyde —50% NaOH→ 4-nitrobenzyl alcohol + sodium 4-nitrobenzoate</span>`},
+  {t:'Aldol condensation', html:`<p>Enolate anions act as carbon nucleophiles, adding reversibly to the carbonyl group of another aldehyde or ketone molecule — this carbon–carbon bond-forming reaction is the aldol condensation.</p><p>Simplest example: two acetaldehyde molecules combine (base catalyst) to give 3-hydroxybutanal ("an aldol" — both aldehyde and alcohol).</p><p>Mechanism: (1) base removes an alpha-H to form the enolate anion; (2) the enolate adds to the carbonyl carbon of a second molecule, forming a new C–C bond and an alkoxide ion; (3) the alkoxide is protonated by solvent, regenerating hydroxide.</p><p>The alpha-carbon of one molecule always bonds to the carbonyl carbon of the other, so the product always has exactly one carbon between the aldehyde and alcohol carbons.</p>`},
+  {t:'Claisen condensation', html:`<p>The main route to β-keto esters: an ester is treated with an alkoxide base matching its own alkyl group.</p><span class="eq">2 CH3COOEt —1. NaOEt 2. H2O→ ethyl acetoacetate + ethanol</span><p>Mechanism (5 steps): (1) alkoxide removes an alpha-H from the ester, forming the ester enolate; (2) the enolate adds to the carbonyl of a second, neutral ester molecule; (3) the tetrahedral intermediate collapses, ejecting alkoxide as the leaving group; (4) the acidic alpha-H of the β-keto ester product (flanked by two carbonyls) is removed by alkoxide — this step drives the whole reaction to completion; (5) acidic work-up reprotonates the product.</p>`},
+  {t:'Reducing agents', html:`<p><strong>LiAlH4</strong> (lithium tetrahydridoaluminate) and <strong>NaBH4</strong> (sodium tetrahydridoborate) both deliver hydride and give the same organic product for a given substrate.</p><p>Reduction of an aldehyde → 1° alcohol (e.g. ethanal → ethanol).</p><p>Reduction of a ketone → 2° alcohol (e.g. propanone → 2-propanol).</p>`},
+  {t:'Reaction with Grignard reagents', html:`<p>Grignard reagents act as carbon nucleophiles: the R group adds irreversibly to the carbonyl carbon, forming a new C–C bond and a magnesium alkoxide, which is protonated (H3O+/HCl) to give an alcohol.</p><p>Formaldehyde + RMgX → 1° alcohol.</p><p>Other aldehydes + RMgX → 2° alcohol.</p><p>Ketones + RMgX → 3° alcohol.</p>`},
+  {t:'Oxidation &amp; the Tollens\' test', html:`<p>Aldehydes (all have an H on the carbonyl carbon) oxidize under acidic conditions to carboxylic acids, and under alkaline conditions to the carboxylate salt.</p><p>Ketones (both groups on the carbonyl carbon are hydrocarbon) resist this oxidation.</p><p>The <strong>Tollens' silver mirror test</strong> exploits this: the colorless silver–ammonia complex is reduced by aldehydes (not ketones) to metallic silver.</p>`},
+  {t:'Addition–elimination: imines &amp; related compounds', html:`<p>Aldehydes and ketones react with ammonia, primary amines, and related H2N–X nitrogen nucleophiles by addition, then elimination of water, giving a C=N compound.</p><table style="width:100%; margin-top:8px; border-collapse:collapse; font-size:13.5px;"><tr><th style="text-align:left; padding:5px 0;">Reagent</th><th style="text-align:left; padding:5px 0;">Product</th></tr><tr><td>Ammonia / 1° amine</td><td>Imine (Schiff base)</td></tr><tr><td>Hydroxylamine</td><td>Oxime</td></tr><tr><td>Hydrazine</td><td>Hydrazone</td></tr><tr><td>Phenylhydrazine</td><td>Phenylhydrazone</td></tr><tr><td>2,4-Dinitrophenylhydrazine</td><td>2,4-DNP hydrazone</td></tr><tr><td>Semicarbazide</td><td>Semicarbazone</td></tr></table>`}
+];
+const minimapList = document.getElementById('minimapList');
+minimapTopics.forEach((topic, i)=>{
+  const b = document.createElement('button');
+  b.innerHTML = topic.t;
+  b.addEventListener('click', ()=>{
+    document.querySelectorAll('.minimap-list button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('minimapContent').innerHTML = `<h3>${topic.t}</h3><div class="body">${topic.html}</div>`;
+  });
+  minimapList.appendChild(b);
+});
+
+/* ---------------------------------------------------------
+   Flashcards
+--------------------------------------------------------- */
+const flashData = [
+  {f:'General formula of an aldehyde?', b:'RCHO'},
+  {f:'General formula of a ketone?', b:'RR′CO'},
+  {f:'What functional group do aldehydes and ketones share?', b:'The carbonyl group, C=O'},
+  {f:'Which is more reactive toward nucleophilic addition, aldehydes or ketones?', b:'Aldehydes — less steric hindrance and less electron donation from only one R group'},
+  {f:'Which is more easily oxidized, aldehydes or ketones?', b:'Aldehydes; ketones resist oxidation'},
+  {f:'IUPAC ending for an aldehyde name?', b:'-al (replacing the alkane\'s -e)'},
+  {f:'IUPAC ending for a ketone name?', b:'-one'},
+  {f:'How are common aldehyde names formed?', b:'From the corresponding carboxylic acid, replacing -ic acid with -aldehyde'},
+  {f:'Ketone suffix when the carbonyl is attached directly to a benzene ring?', b:'-phenone'},
+  {f:'Common name for propanone?', b:'Acetone'},
+  {f:'Why do aldehydes/ketones boil lower than similarly-sized alcohols?', b:'Their only hydrogens are bonded to carbon, so they cannot hydrogen-bond with each other'},
+  {f:'Up to about how many carbons are aldehydes/ketones water-soluble?', b:'About five'},
+  {f:'Reagent that oxidizes a 1° alcohol to an aldehyde (without over-oxidizing)?', b:'PCC (pyridinium chlorochromate)'},
+  {f:'Reagents that oxidize a 2° alcohol to a ketone?', b:'KMnO4 or K2Cr2O7'},
+  {f:'Reaction name: arene + acid chloride/AlCl3 → aryl ketone', b:'Friedel–Crafts acylation'},
+  {f:'Reactive intermediate in Friedel–Crafts acylation?', b:'An acylium ion, RC≡O⁺'},
+  {f:'Markovnikov hydration of a terminal alkyne (H⁺/H2O, Hg²⁺) gives what?', b:'A methyl ketone'},
+  {f:'Reagent that converts a Grignard reagent into an organocadmium compound?', b:'Dry CdCl2'},
+  {f:'Why use organocadmium instead of Grignard reagent directly with acid chlorides?', b:'Grignard reagents overreact to give tertiary alcohols; organocadmium stops cleanly at the ketone'},
+  {f:'Restriction on the R group of a usable organocadmium reagent?', b:'Must be aryl or primary alkyl'},
+  {f:'What forms when water adds to a carbonyl group?', b:'A gem-diol (hydrate) — usually unstable, except for formaldehyde and chloral'},
+  {f:'What is formalin?', b:'An aqueous solution of formaldehyde, existing almost entirely as its hydrate'},
+  {f:'What is a hemiacetal?', b:'The product of one alcohol adding to a carbonyl (OH and OR on the same carbon)'},
+  {f:'What forms when excess alcohol reacts further with a hemiacetal?', b:'An acetal, with loss of water'},
+  {f:'What is a cyanohydrin?', b:'The product of HCN addition to a carbonyl — OH and CN on the same carbon'},
+  {f:'Typical catalyst for cyanohydrin formation?', b:'A base, e.g. KOH'},
+  {f:'What is the Cannizzaro reaction?', b:'Self-oxidation-reduction of an aldehyde lacking an alpha-H, in strong base, giving an alcohol and a carboxylate salt'},
+  {f:'Why must the aldehyde lack an alpha-H for Cannizzaro?', b:'Otherwise base would deprotonate it and aldol condensation would occur instead'},
+  {f:'Why is the product of an aldol condensation called an "aldol"?', b:'Because it is both an aldehyde and an alcohol'},
+  {f:'Which carbon of one molecule bonds to which carbon of the other, in an aldol condensation?', b:'The alpha carbon of one bonds to the carbonyl carbon of the other'},
+  {f:'What nucleophile drives the aldol condensation?', b:'The enolate anion, formed by removing an alpha-H with base'},
+  {f:'Main product of a Claisen condensation?', b:'A β-ketoester'},
+  {f:'What drives the Claisen condensation to completion?', b:'Deprotonation of the acidic β-ketoester product by alkoxide base'},
+  {f:'Name two hydride reducing agents for carbonyls.', b:'LiAlH4 (lithium tetrahydridoaluminate) and NaBH4 (sodium tetrahydridoborate)'},
+  {f:'Reduction of an aldehyde gives which class of alcohol?', b:'Primary alcohol'},
+  {f:'Reduction of a ketone gives which class of alcohol?', b:'Secondary alcohol'},
+  {f:'Formaldehyde + Grignard reagent gives which class of alcohol?', b:'Primary alcohol'},
+  {f:'Any other aldehyde + Grignard reagent gives which class of alcohol?', b:'Secondary alcohol'},
+  {f:'A ketone + Grignard reagent gives which class of alcohol?', b:'Tertiary alcohol'},
+  {f:'What does the Tollens\' test distinguish?', b:'Aldehydes (silver mirror) from ketones (no reaction)'},
+  {f:'Oxidation of an aldehyde under acidic conditions gives?', b:'A carboxylic acid'},
+  {f:'Oxidation of an aldehyde under alkaline conditions gives?', b:'The carboxylate salt'},
+  {f:'Carbonyl + hydrazine gives?', b:'A hydrazone'},
+  {f:'Carbonyl + phenylhydrazine gives?', b:'A phenylhydrazone'},
+  {f:'Carbonyl + 2,4-dinitrophenylhydrazine gives?', b:'A 2,4-dinitrophenylhydrazone'},
+  {f:'Carbonyl + hydroxylamine gives?', b:'An oxime'},
+  {f:'Carbonyl + semicarbazide gives?', b:'A semicarbazone'},
+  {f:'Carbonyl + ammonia or a primary amine gives?', b:'An imine (Schiff base)'}
+];
+let flashOrder = flashData.map((_,i)=>i);
+let flashIdx = 0;
+function showFlash(){
+  const card = flashData[flashOrder[flashIdx]];
+  document.getElementById('flashFront').textContent = card.f;
+  document.getElementById('flashBack').textContent = card.b;
+  document.getElementById('flashCount').textContent = `Card ${flashIdx+1} / ${flashOrder.length}`;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+document.getElementById('flashcard').addEventListener('click', ()=> document.getElementById('flashcard').classList.toggle('flipped'));
+document.getElementById('flashFlip').addEventListener('click', ()=> document.getElementById('flashcard').classList.toggle('flipped'));
+document.getElementById('flashNext').addEventListener('click', ()=>{ flashIdx=(flashIdx+1)%flashOrder.length; showFlash(); });
+document.getElementById('flashPrev').addEventListener('click', ()=>{ flashIdx=(flashIdx-1+flashOrder.length)%flashOrder.length; showFlash(); });
+document.getElementById('flashShuffle').addEventListener('click', ()=>{ flashOrder = shuffle(flashOrder); flashIdx=0; showFlash(); });
+showFlash();
+
+/* ---------------------------------------------------------
+   Quiz bank
+--------------------------------------------------------- */
+const quizData = [
+  {q:'What is the general formula of a ketone?', choices:['RCHO','RR′CO','RCOOH','ROH'], correct:1},
+  {q:'Which functional group determines the chemistry of aldehydes and ketones?', choices:['Hydroxyl','Carbonyl','Carboxyl','Amine'], correct:1},
+  {q:'Compared to ketones, aldehydes are generally:', choices:['Less reactive toward nucleophilic addition','More reactive toward nucleophilic addition','Unreactive toward oxidation','Insoluble in all solvents'], correct:1},
+  {q:'Which is oxidized only with difficulty?', choices:['Aldehydes','Ketones','Alcohols','Both equally'], correct:1},
+  {q:'The IUPAC suffix for an aldehyde is:', choices:['-ol','-one','-al','-oic acid'], correct:2},
+  {q:'The IUPAC suffix for a ketone is:', choices:['-ol','-one','-al','-ate'], correct:1},
+  {q:'Common names of aldehydes are derived by replacing "-ic acid" with:', choices:['-ol','-aldehyde','-one','-ane'], correct:1},
+  {q:'In IUPAC aldehyde names, which carbon is always C-1?', choices:['The alpha carbon','The terminal methyl carbon','The carbonyl carbon','The beta carbon'], correct:2},
+  {q:'A ketone with its carbonyl attached directly to a benzene ring uses the suffix:', choices:['-one','-al','-phenone','-oxide'], correct:2},
+  {q:'The common name for propanone is:', choices:['Formaldehyde','Acetone','Acetaldehyde','Benzophenone'], correct:1},
+  {q:'Why do aldehydes/ketones have lower boiling points than alcohols of similar molecular weight?', choices:['They are non-polar','They cannot hydrogen-bond with each other','They have smaller dipoles','They are all gases'], correct:1},
+  {q:'Aldehydes and ketones are appreciably water-soluble up to about how many carbons?', choices:['2','5','10','15'], correct:1},
+  {q:'PCC oxidizes a primary alcohol to:', choices:['A carboxylic acid','A ketone','An aldehyde','An ether'], correct:2},
+  {q:'KMnO4 or K2Cr2O7 oxidize a secondary alcohol to:', choices:['An aldehyde','A ketone','A carboxylic acid','An alkene'], correct:1},
+  {q:'Friedel–Crafts acylation requires which catalyst?', choices:['H2SO4','AlCl3','NaOH','HCN'], correct:1},
+  {q:'The reactive intermediate in Friedel–Crafts acylation is:', choices:['A carbanion','An acylium ion','A free radical','An enolate'], correct:1},
+  {q:'Acid-catalyzed hydration of a terminal alkyne (Hg²⁺/H⁺) gives a:', choices:['Primary alcohol','Aldehyde','Methyl ketone','Carboxylic acid'], correct:2},
+  {q:'Organocadmium compounds are formed by treating a Grignard reagent with:', choices:['CdCl2','AlCl3','HCl','PCC'], correct:0},
+  {q:'Why can\'t Grignard reagents be used directly with acid chlorides to cleanly make ketones?', choices:['They don\'t react at all','They overreact to give tertiary alcohols','They only work with esters','They require a special catalyst'], correct:1},
+  {q:'A gem-diol forms when a carbonyl compound reacts with:', choices:['HCN','Water','An alcohol','Hydrazine'], correct:1},
+  {q:'Formalin is best described as:', choices:['Pure formaldehyde gas','An aqueous solution of formaldehyde (mostly as its hydrate)','A chlorinated aldehyde','An acetal'], correct:1},
+  {q:'A hemiacetal reacts with excess alcohol (acid catalyst) to form:', choices:['A cyanohydrin','An acetal','A hydrate','An oxime'], correct:1},
+  {q:'HCN addition to a carbonyl compound produces a:', choices:['Hydrate','Hemiacetal','Cyanohydrin','Hydrazone'], correct:2},
+  {q:'The Cannizzaro reaction requires an aldehyde that:', choices:['Has an alpha-hydrogen','Lacks an alpha-hydrogen','Is aromatic only','Is actually a ketone'], correct:1},
+  {q:'The products of a Cannizzaro reaction are:', choices:['Two carboxylic acids','An alcohol and a carboxylate salt','Two alcohols','An ester and water'], correct:1},
+  {q:'An "aldol" is named for being both:', choices:['An acid and an ester','An aldehyde and an alcohol','An alkene and a ketone','An amine and an alcohol'], correct:1},
+  {q:'In an aldol condensation, the nucleophile attacking the carbonyl carbon is the:', choices:['Hydroxide ion','Enolate anion','Alkoxide of the product','Ammonia'], correct:1},
+  {q:'The main product of a Claisen condensation is a:', choices:['Cyanohydrin','β-ketoester','Hemiacetal','Hydrazone'], correct:1},
+  {q:'What drives the Claisen condensation to completion?', choices:['Evaporation of solvent','Deprotonation of the acidic β-ketoester by alkoxide','Precipitation of the ester','High temperature alone'], correct:1},
+  {q:'LiAlH4 and NaBH4 are both examples of:', choices:['Oxidizing agents','Hydride reducing agents','Lewis acids','Dehydrating agents'], correct:1},
+  {q:'Reduction of an aldehyde gives a:', choices:['Secondary alcohol','Tertiary alcohol','Primary alcohol','Carboxylic acid'], correct:2},
+  {q:'Reduction of a ketone gives a:', choices:['Primary alcohol','Secondary alcohol','Tertiary alcohol','Aldehyde'], correct:1},
+  {q:'Formaldehyde + a Grignard reagent gives a:', choices:['Secondary alcohol','Tertiary alcohol','Primary alcohol','Ketone'], correct:2},
+  {q:'A ketone + a Grignard reagent gives a:', choices:['Primary alcohol','Secondary alcohol','Tertiary alcohol','Ether'], correct:2},
+  {q:'The Tollens\' test distinguishes aldehydes from ketones because aldehydes:', choices:['Turn blue litmus red','Reduce the silver–ammonia complex to a silver mirror','Form precipitates with water','React only with NaOH'], correct:1},
+  {q:'Oxidation of an aldehyde under acidic conditions gives a:', choices:['Carboxylate salt','Carboxylic acid','Ketone','Ester'], correct:1},
+  {q:'Oxidation of an aldehyde under alkaline conditions gives a:', choices:['Carboxylic acid','Salt of a carboxylic acid','Alcohol','Ester'], correct:1},
+  {q:'Carbonyl + hydrazine (H2N–NH2) forms a:', choices:['Oxime','Hydrazone','Semicarbazone','Acetal'], correct:1},
+  {q:'Carbonyl + 2,4-dinitrophenylhydrazine forms a:', choices:['Semicarbazone','Oxime','2,4-Dinitrophenylhydrazone','Imine'], correct:2},
+  {q:'Carbonyl + hydroxylamine forms a(n):', choices:['Hydrazone','Oxime','Imine','Acetal'], correct:1},
+  {q:'Carbonyl + semicarbazide forms a:', choices:['Oxime','Hydrazone','Semicarbazone','Cyanohydrin'], correct:2},
+  {q:'Carbonyl + ammonia or a primary amine forms a(n):', choices:['Acetal','Imine (Schiff base)','Hemiacetal','Hydrazone'], correct:1}
+];
+
+let quizAnswered = 0;
+let quizCorrect = 0;
+
+function buildQuiz(){
+  quizAnswered = 0; quizCorrect = 0;
+  document.getElementById('quizScore').textContent = `Score: 0 / ${quizData.length}`;
+  const list = document.getElementById('quizList');
+  list.innerHTML = '';
+  const order = shuffle(quizData.map((_,i)=>i));
+  order.forEach((qi, displayIndex)=>{
+    const item = quizData[qi];
+    const choiceIdx = item.choices.map((_,i)=>i);
+    const shuffled = shuffle(choiceIdx);
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.innerHTML = `
+      <div class="qn">Question ${displayIndex+1} of ${quizData.length}</div>
+      <p class="qtext">${item.q}</p>
+      <div class="choices"></div>
+    `;
+    const choicesWrap = card.querySelector('.choices');
+    shuffled.forEach(ci=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = item.choices[ci];
+      btn.addEventListener('click', ()=>{
+        const isCorrect = ci===item.correct;
+        Array.from(choicesWrap.children).forEach(b=>b.disabled=true);
+        btn.classList.add(isCorrect?'correct':'wrong');
+        if(!isCorrect){
+          const correctBtn = Array.from(choicesWrap.children).find(b=>b.textContent===item.choices[item.correct]);
+          if(correctBtn) correctBtn.classList.add('correct');
+        }
+        quizAnswered++;
+        if(isCorrect) quizCorrect++;
+        document.getElementById('quizScore').textContent = `Score: ${quizCorrect} / ${quizData.length} (${quizAnswered} answered)`;
+      });
+      choicesWrap.appendChild(btn);
+    });
+    list.appendChild(card);
+  });
+}
+document.getElementById('quizRestart').addEventListener('click', buildQuiz);
+document.getElementById('quizRestart2').addEventListener('click', ()=>{buildQuiz(); document.getElementById('quiz').scrollIntoView({behavior:'smooth'});});
+buildQuiz();
+</script>
+</body>
+</html>
