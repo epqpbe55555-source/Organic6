@@ -210,7 +210,8 @@
     transition:transform .12s ease, opacity .12s ease;
   }
   .btn:hover{transform:translateY(-1px);}
-  .btn.ghost{background:transparent; color:var(--ink); border:1px solid var(--line-paper);}
+  .btn.ghost{background:transparent; color:var(--paper); border:1px solid rgba(251,247,238,0.35);}
+  .btn.ghost:hover{background:rgba(251,247,238,0.08);}
   .btn:disabled{opacity:.35; cursor:default; transform:none;}
 
   .toggle-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
@@ -257,11 +258,13 @@
   .minimap-card .eq{font-family:'IBM Plex Mono',monospace; background:var(--paper-2); padding:10px 12px; border-radius:8px; font-size:13px; display:block; margin:8px 0;}
 
   /* ---------- Flashcards ---------- */
-  .flash-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;}
+  #flashcards .toggle-row, #quiz .toggle-row{margin-bottom:8px;}
+  #flashcards .panel-head, #quiz .panel-head{margin-bottom:10px;}
+  .flash-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;}
   .flash-count{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted);}
-  .flash-stage{display:flex; justify-content:center; margin-bottom:16px;}
+  .flash-stage{display:flex; justify-content:center; margin-bottom:10px;}
   .flashcard{
-    width:100%; max-width:560px; height:260px;
+    width:100%; max-width:560px; height:210px;
     perspective:1400px; cursor:pointer;
   }
   .flashcard .inner{
@@ -563,7 +566,12 @@
     <section class="panel" id="flashcards">
       <div class="panel-head">
         <h2>Flash Cards</h2>
-        <p>Tap a card to flip it. Covers definitions, mechanisms, and reagent → product facts.</p>
+        <p>Tap a card to flip it. Pick a difficulty level — every level draws on the full set of definitions, mechanisms, and reagent → product facts.</p>
+      </div>
+      <div class="toggle-row" data-group="flashLevel">
+        <button class="toggle-btn active" data-level="easy">Easy (60)</button>
+        <button class="toggle-btn" data-level="medium">Medium (50)</button>
+        <button class="toggle-btn" data-level="hard">Hard (40)</button>
       </div>
       <div class="flash-top">
         <span class="flash-count" id="flashCount">Card 1 / 1</span>
@@ -588,7 +596,12 @@
     <section class="panel" id="quiz">
       <div class="panel-head">
         <h2>Quiz Bank</h2>
-        <p>36 questions across every topic. Answer choices are reshuffled on every attempt.</p>
+        <p>Pick a difficulty level. Answer choices are reshuffled on every attempt.</p>
+      </div>
+      <div class="toggle-row" data-group="quizLevel">
+        <button class="toggle-btn active" data-level="easy">Easy (60)</button>
+        <button class="toggle-btn" data-level="medium">Medium (50)</button>
+        <button class="toggle-btn" data-level="hard">Hard (40)</button>
       </div>
       <div class="quiz-top">
         <span class="quiz-score" id="quizScore">Score: 0 / 0</span>
@@ -857,9 +870,9 @@ minimapTopics.forEach((topic, i)=>{
 });
 
 /* ---------------------------------------------------------
-   Flashcards
+   Flash cards — 3 difficulty levels
 --------------------------------------------------------- */
-const flashData = [
+const flashDataEasy = [
   {f:'General formula of an aldehyde?', b:'RCHO'},
   {f:'General formula of a ketone?', b:'RR′CO'},
   {f:'What functional group do aldehydes and ketones share?', b:'The carbonyl group, C=O'},
@@ -907,8 +920,120 @@ const flashData = [
   {f:'Carbonyl + 2,4-dinitrophenylhydrazine gives?', b:'A 2,4-dinitrophenylhydrazone'},
   {f:'Carbonyl + hydroxylamine gives?', b:'An oxime'},
   {f:'Carbonyl + semicarbazide gives?', b:'A semicarbazone'},
-  {f:'Carbonyl + ammonia or a primary amine gives?', b:'An imine (Schiff base)'}
+  {f:'Carbonyl + ammonia or a primary amine gives?', b:'An imine (Schiff base)'},
+  {f:'Common and IUPAC names of HCHO?', b:'Formaldehyde (common); methanal (IUPAC)'},
+  {f:'Common and IUPAC names of CH3CHO?', b:'Acetaldehyde (common); ethanal (IUPAC)'},
+  {f:'Common and IUPAC names of CH3CH2CHO?', b:'Propionaldehyde (common); propanal (IUPAC)'},
+  {f:'Simplest aromatic aldehyde?', b:'Benzaldehyde (C6H5CHO)'},
+  {f:'Salicylaldehyde is also called?', b:'o-Hydroxybenzaldehyde'},
+  {f:'Phenylacetaldehyde is also called?', b:'Phenylethanal'},
+  {f:'IUPAC name of methyl ethyl ketone?', b:'Butanone'},
+  {f:'What is acetophenone?', b:'A phenyl methyl ketone, C6H5-CO-CH3'},
+  {f:'What is benzophenone?', b:'A diphenyl ketone, C6H5-CO-C6H5'},
+  {f:'What kind of ring does the Reimer–Tiemann synthesis add an aldehyde group to?', b:'A phenolic (aromatic) ring'},
+  {f:'Aliphatic ketones are most readily prepared from which alcohols?', b:'Secondary alcohols'},
+  {f:'What is chloral?', b:'Trichloroacetaldehyde, Cl3C-CHO'}
 ];
+
+const flashDataMedium = [
+  {f:'1-Butanol + PCC gives which product (and its bp)?', b:'Butanal (bp ≈76°C) — PCC stops oxidation at the aldehyde stage'},
+  {f:'Menthol + K2Cr2O7/H2SO4 gives which specific ketone?', b:'2-Isopropyl-5-methylcyclohexan-1-one'},
+  {f:'Benzene + CH3COCl/AlCl3 gives which product?', b:'Acetophenone'},
+  {f:'1-Octyne + H⁺/H2O/Hg²⁺ gives which product?', b:'2-Octanone'},
+  {f:'p-Nitrobenzoyl chloride + dimethylcadmium gives?', b:'p-Nitroacetophenone (methyl p-nitrophenyl ketone)'},
+  {f:'Why do Grignard reagents give tertiary alcohols with acid chlorides instead of ketones?', b:'The ketone formed in situ reacts further with excess Grignard reagent'},
+  {f:'Acetaldehyde + HCN/KOH gives?', b:'2-Hydroxypropanenitrile (acetaldehyde cyanohydrin)'},
+  {f:'Acetone + HCN/KOH gives?', b:'2-Hydroxy-2-methylpropanenitrile'},
+  {f:'Cyclohexanone + HCN/KOH gives?', b:'1-Hydroxycyclohexane-1-carbonitrile'},
+  {f:'Benzaldehyde + HCN/KOH gives?', b:'2-Hydroxy-2-phenylacetonitrile'},
+  {f:'4-Nitrobenzaldehyde + 50% NaOH (Cannizzaro) gives which two products?', b:'4-Nitrobenzyl alcohol + sodium 4-nitrobenzoate'},
+  {f:'Two acetaldehyde molecules + catalytic OH⁻ give which aldol?', b:'3-Hydroxybutanal'},
+  {f:'Two ethyl acetate molecules + NaOEt give which product (Claisen)?', b:'Ethyl acetoacetate + ethanol'},
+  {f:'Benzaldehyde + 2 CH3CH2OH/dry HCl gives?', b:'Benzaldehyde diethyl acetal'},
+  {f:'Acetone + ethylene glycol/H⁺ gives?', b:'A cyclic acetal, plus water'},
+  {f:'5-Hydroxypentanal cyclizes intramolecularly to give what?', b:'A six-membered cyclic hemiacetal'},
+  {f:'Which glucose carbon\'s OH attacks C-1 to close the pyranose ring?', b:'C-5'},
+  {f:'Acetone + hydrazine gives?', b:'Acetone hydrazone'},
+  {f:'Benzaldehyde + phenylhydrazine gives?', b:'Benzaldehyde phenylhydrazone'},
+  {f:'Acetone + 2,4-dinitrophenylhydrazine gives?', b:'Acetone-2,4-dinitrophenylhydrazone'},
+  {f:'Ethanal + hydroxylamine gives?', b:'Ethanal oxime'},
+  {f:'Cyclopentanone + semicarbazide gives?', b:'Cyclopentanone semicarbazone'},
+  {f:'3-Pentanone + phenylhydrazine gives?', b:'Diethyl ketone phenylhydrazone'},
+  {f:'Why is formaldehyde\'s hydrate unusually stable?', b:'Its small size and lack of electron-donating groups keep the carbonyl carbon highly electrophilic'},
+  {f:'Why is chloral hydrate stable?', b:'The electron-withdrawing CCl3 group boosts the carbonyl\'s electrophilicity'},
+  {f:'Hybridization change at the carbonyl carbon during addition?', b:'sp2 (trigonal) → sp3 (tetrahedral)'},
+  {f:'How does protonating the carbonyl oxygen help weak nucleophiles add?', b:'It creates a resonance-stabilized carbocation at carbon'},
+  {f:'Why must organocadmium R′ groups be aryl or primary alkyl?', b:'Only those are stable enough to survive to react with the acid chloride'},
+  {f:'Diisopentylcadmium + the matching keto-acid chloride gives which ester product?', b:'Methyl 4-oxo-7-methyloctanoate'},
+  {f:'EtMgBr + formaldehyde, then H3O⁺, gives?', b:'1-Propanol (a primary alcohol)'},
+  {f:'EtMgBr + acetaldehyde, then H3O⁺, gives?', b:'2-Butanol (a secondary alcohol)'},
+  {f:'EtMgBr + acetone, then H3O⁺, gives?', b:'2-Methyl-2-butanol (a tertiary alcohol)'},
+  {f:'What is the Tollens\' reagent, chemically?', b:'The diammine silver(I) complex ion, [Ag(NH3)2]⁺, in base'},
+  {f:'Besides the silver mirror, what else forms in the Tollens\' reaction?', b:'The carboxylate ion, ammonia, and water'},
+  {f:'Why can\'t ketones give a positive Tollens\' test?', b:'They have no carbonyl hydrogen available to be oxidized'},
+  {f:'In IUPAC/common naming, which Greek letter matches IUPAC\'s C-2?', b:'Alpha'},
+  {f:'IUPAC name for α-methylvaleraldehyde?', b:'2-Methylpentanal'},
+  {f:'IUPAC name for γ-methylvaleraldehyde (isocaproaldehyde)?', b:'4-Methylpentanal'},
+  {f:'What does the "4′" indicate in 3-nitro-4′-methylbenzophenone?', b:'The methyl substituent is on the second, different phenyl ring'},
+  {f:'Why do complex aliphatic ketones need organocadmium rather than direct alcohol oxidation?', b:'No single secondary alcohol precursor with that exact carbon skeleton may be available'},
+  {f:'Why is nucleophilic addition (not substitution) typical for aldehyde/ketone carbonyls?', b:'There is no leaving group on the carbonyl carbon to expel'},
+  {f:'Why are alpha-hydrogens of carbonyl compounds acidic enough for base to remove?', b:'The carbonyl group stabilizes the resulting carbanion by resonance'},
+  {f:'Why does the Claisen condensation need a full equivalent of alkoxide base, not just catalytic?', b:'The final deprotonation of the acidic β-ketoester product consumes a full equivalent'},
+  {f:'Which oxidant system converts menthol to 2-isopropyl-5-methylcyclohexan-1-one?', b:'K2Cr2O7 / H2SO4'},
+  {f:'Which carbon of ethyl acetate is deprotonated in Claisen step 1?', b:'The alpha carbon (the CH3 next to the carbonyl)'},
+  {f:'Why is the tetrahedral intermediate in Claisen step 2 an anion?', b:'The nucleophile that attacked — the ester enolate — was already an anion'},
+  {f:'What is expelled when the Claisen tetrahedral intermediate collapses (step 3)?', b:'Ethoxide ion'},
+  {f:'What forms when a nitrogen nucleophile like hydrazine first adds to a carbonyl, before water is lost?', b:'A carbinolamine (OH and NHX on the same carbon)'},
+  {f:'What overall reaction type covers hydrazone/oxime/imine formation?', b:'Addition–elimination (condensation)'},
+  {f:'Why does an aldol condensation always leave one carbon between the two original carbonyls?', b:'Only the alpha-carbon of one molecule acts as the nucleophile bonding to the other\'s carbonyl carbon'}
+];
+
+const flashDataHard = [
+  {f:'Resonance forms of the carbonyl group?', b:':C=O: (neutral) ↔ ⁺C–O:⁻ (charge-separated); nucleophile attacks C, H⁺ attacks O'},
+  {f:'Resonance of a protonated carbonyl?', b:'C=O⁺H ↔ ⁺C–OH — a resonance-stabilized carbocation, far more electrophilic than the neutral carbonyl'},
+  {f:'Why does protonating the carbonyl O supercharge electrophilicity at C?', b:'The positive charge delocalizes onto carbon by resonance, turning a mild δ+ into a true carbocation'},
+  {f:'The three steps of Friedel–Crafts acylation, in order?', b:'(1) RCOCl+AlCl3→acylium ion+AlCl4⁻; (2) ArH attacks acylium→arenium intermediate; (3) AlCl4⁻ removes H⁺→ArCOR+HCl+AlCl3'},
+  {f:'Why doesn\'t the acylium ion rearrange the way alkyl cations do in Friedel–Crafts alkylation?', b:'It is resonance-stabilized by the adjacent oxygen lone pair, so it has no drive to rearrange'},
+  {f:'Why do Grignard reagents overreact with acid chlorides but organocadmium reagents don\'t?', b:'Grignard reagents are strongly nucleophilic and add again to the ketone formed in situ; organocadmium is too weak to add to that less-electrophilic ketone'},
+  {f:'The five Claisen-condensation steps for ethyl acetate → ethyl acetoacetate?', b:'(1) enolate formation; (2) enolate adds to a 2nd ester; (3) intermediate expels ethoxide; (4) ethoxide deprotonates the acidic β-ketoester; (5) acid workup reprotonates it'},
+  {f:'Why is the β-ketoester\'s alpha-H far more acidic than the starting ester\'s?', b:'Its carbanion is stabilized by resonance into two flanking carbonyls instead of just one'},
+  {f:'The three aldol-condensation steps for acetaldehyde?', b:'(1) base removes an alpha-H, forming the enolate; (2) the enolate attacks a 2nd, un-ionized acetaldehyde; (3) the resulting alkoxide is protonated by solvent, regenerating hydroxide'},
+  {f:'Why must only a small fraction of aldehyde be converted to enolate for the aldol to proceed?', b:'The enolate (nucleophile) needs an un-ionized carbonyl molecule (electrophile) left to attack'},
+  {f:'Why does an aldol product always have exactly one carbon between the two original carbonyl carbons?', b:'Only the alpha-carbon acts as the nucleophile, so it alone bridges the two molecules'},
+  {f:'Why is the aldol product called a "β-hydroxy aldehyde"?', b:'The new OH sits on the carbon that was the 2nd molecule\'s carbonyl carbon — two carbons (beta) from the remaining carbonyl'},
+  {f:'Mechanistic logic of the Cannizzaro reaction?', b:'Hydroxide adds to one aldehyde; that intermediate transfers a hydride to a 2nd aldehyde — one is oxidized to carboxylate, the other reduced to alcohol'},
+  {f:'Why can\'t an aldehyde with an alpha-H undergo a clean Cannizzaro reaction?', b:'Base preferentially removes the more acidic alpha-H, triggering aldol condensation instead'},
+  {f:'Why do LiAlH4 and NaBH4 give the identical alcohol from a carbonyl?', b:'Both simply deliver a hydride ion to the same electrophilic carbonyl carbon; they differ in reactivity, not product identity'},
+  {f:'In acid–base terms, why does Grignard addition to a carbonyl favor the alkoxide product?', b:'It converts a very strong base (carbanion) into a much weaker base (alkoxide); equilibrium favors the weaker base'},
+  {f:'Mechanism of hemiacetal → acetal under acid catalysis?', b:'Protonation and loss of water gives a resonance-stabilized oxocarbenium ion; a 2nd alcohol adds, then loses H⁺ to give the acetal'},
+  {f:'Why is glucose\'s cyclization to β-D-glucopyranose intramolecular?', b:'The C-5 OH and C-1 aldehyde are in the same molecule and become positioned for the OH oxygen to attack the aldehyde carbon directly'},
+  {f:'Why do hydrazone/oxime/imine formations go to completion, unlike simple hydration?', b:'The addition intermediate can eliminate water to form a stable, conjugated C=N bond — a pathway a simple hydrate lacks'},
+  {f:'Two reasons aldehydes beat ketones in nucleophilic addition?', b:'Less steric hindrance (H vs. a 2nd R group) and less electron donation into the carbonyl carbon (one R group vs. two)'},
+  {f:'Why are ketones oxidized only with difficulty?', b:'Their carbonyl carbon has no H to remove; oxidative cleavage would require breaking a C–C bond instead'},
+  {f:'Why does the organocadmium reagent react cleanly with the acid chloride, not the ketone?', b:'The acid chloride\'s Cl⁻ leaving group allows nucleophilic acyl substitution, regenerating a carbonyl'},
+  {f:'What two functional groups does "methyl 4-oxo-7-methyloctanoate" contain?', b:'A ketone (4-oxo) and a methyl ester — a γ-keto ester'},
+  {f:'What structural feature sends aldol vs. Claisen intermediates down different paths?', b:'Aldehydes/ketones have no leaving group (→ protonation → aldol); esters have an OR leaving group (→ expelled → β-ketoester)'},
+  {f:'Why is chloral hydrate unusually stable?', b:'Three electron-withdrawing Cl atoms make the carbonyl carbon far more electrophilic, favoring the hydrate'},
+  {f:'What determines addition vs. substitution after a nucleophile attacks a carbonyl?', b:'Whether the tetrahedral intermediate has a leaving group it can expel (substitution) or not (addition)'},
+  {f:'Why does the carbonyl carbon attract nucleophiles while the oxygen attracts protons?', b:'Resonance places positive charge on carbon and negative charge (plus lone pairs) on oxygen'},
+  {f:'Rank formaldehyde, acetaldehyde, acetone by nucleophilic-addition reactivity.', b:'Formaldehyde > acetaldehyde > acetone — more alkyl groups mean more steric bulk and more electron donation, both deactivating'},
+  {f:'Why does a ketone give a clean, single-addition product with a Grignard reagent?', b:'Once protonated on workup, the resulting alcohol is no longer electrophilic, so there is no reactive carbonyl left to attack'},
+  {f:'Hybridization/geometry change at the carbonyl carbon during nucleophilic addition?', b:'sp2 trigonal (~120°) in the carbonyl becomes sp3 tetrahedral (~109.5°) in the addition product'},
+  {f:'Why does formaldehyde form an unusually stable, isolable hydrate?', b:'Its small size and lack of electron-donating alkyl groups leave the carbonyl carbon highly electrophilic'},
+  {f:'Why does Hg²⁺/H⁺ hydration of a terminal alkyne give a methyl ketone, not an aldehyde?', b:'Markovnikov addition puts OH on the more-substituted internal carbon; the resulting enol tautomerizes to the more stable ketone'},
+  {f:'Why must organocadmium R′ groups be limited to aryl or primary alkyl?', b:'Secondary/tertiary alkylcadmium compounds are too unstable to survive long enough to react with the acid chloride'},
+  {f:'What is the shared first mechanistic step of both aldol and Claisen condensations?', b:'Base removes an acidic alpha-hydrogen to generate a resonance-stabilized enolate anion'},
+  {f:'Which named reaction specifically introduces an aldehyde group onto a phenolic aromatic ring?', b:'The Reimer–Tiemann synthesis'},
+  {f:'Why does converting a hemiacetal to an acetal need a second equivalent of alcohol?', b:'The oxocarbenium ion formed after water loss must be captured by a new alcohol nucleophile'},
+  {f:'What distinguishes α-methylvaleraldehyde from γ-methylvaleraldehyde?', b:'The methyl group sits on C-2 (alpha) in one and C-4 (gamma) in the other — 2-methylpentanal vs. 4-methylpentanal'},
+  {f:'Why is the Tollens\' test result tied to aldehydes\' general oxidative ease?', b:'Both rely on the aldehyde\'s carbonyl C–H bond, which ketones simply do not have'},
+  {f:'Best method to build a fully aliphatic, unsymmetrical ketone too complex for direct 2° alcohol oxidation?', b:'The organocadmium route: Grignard + CdCl2 → organocadmium, then + the appropriate acid chloride'},
+  {f:'Why is the tetrahedral intermediate in Claisen step 2 anionic?', b:'The attacking nucleophile — the ester enolate — was itself an anion, and that charge carries over onto the alkoxide oxygen'}
+];
+
+const flashLevels = {easy:flashDataEasy, medium:flashDataMedium, hard:flashDataHard};
+let flashLevel = 'easy';
+let flashData = flashLevels[flashLevel];
 let flashOrder = flashData.map((_,i)=>i);
 let flashIdx = 0;
 function showFlash(){
@@ -923,12 +1048,23 @@ document.getElementById('flashFlip').addEventListener('click', ()=> document.get
 document.getElementById('flashNext').addEventListener('click', ()=>{ flashIdx=(flashIdx+1)%flashOrder.length; showFlash(); });
 document.getElementById('flashPrev').addEventListener('click', ()=>{ flashIdx=(flashIdx-1+flashOrder.length)%flashOrder.length; showFlash(); });
 document.getElementById('flashShuffle').addEventListener('click', ()=>{ flashOrder = shuffle(flashOrder); flashIdx=0; showFlash(); });
+document.querySelectorAll('[data-group="flashLevel"] .toggle-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-group="flashLevel"] .toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    flashLevel = btn.dataset.level;
+    flashData = flashLevels[flashLevel];
+    flashOrder = flashData.map((_,i)=>i);
+    flashIdx = 0;
+    showFlash();
+  });
+});
 showFlash();
 
 /* ---------------------------------------------------------
-   Quiz bank
+   Quiz bank — 3 difficulty levels
 --------------------------------------------------------- */
-const quizData = [
+const quizDataEasy = [
   {q:'What is the general formula of a ketone?', choices:['RCHO','RR′CO','RCOOH','ROH'], correct:1},
   {q:'Which functional group determines the chemistry of aldehydes and ketones?', choices:['Hydroxyl','Carbonyl','Carboxyl','Amine'], correct:1},
   {q:'Compared to ketones, aldehydes are generally:', choices:['Less reactive toward nucleophilic addition','More reactive toward nucleophilic addition','Unreactive toward oxidation','Insoluble in all solvents'], correct:1},
@@ -970,8 +1106,126 @@ const quizData = [
   {q:'Carbonyl + 2,4-dinitrophenylhydrazine forms a:', choices:['Semicarbazone','Oxime','2,4-Dinitrophenylhydrazone','Imine'], correct:2},
   {q:'Carbonyl + hydroxylamine forms a(n):', choices:['Hydrazone','Oxime','Imine','Acetal'], correct:1},
   {q:'Carbonyl + semicarbazide forms a:', choices:['Oxime','Hydrazone','Semicarbazone','Cyanohydrin'], correct:2},
-  {q:'Carbonyl + ammonia or a primary amine forms a(n):', choices:['Acetal','Imine (Schiff base)','Hemiacetal','Hydrazone'], correct:1}
+  {q:'Carbonyl + ammonia or a primary amine forms a(n):', choices:['Acetal','Imine (Schiff base)','Hemiacetal','Hydrazone'], correct:1},
+  {q:'What is the IUPAC name of formaldehyde?', choices:['Ethanal','Methanal','Methanol','Methanoic acid'], correct:1},
+  {q:'What is the IUPAC name of acetaldehyde?', choices:['Methanal','Ethanal','Propanal','Ethanol'], correct:1},
+  {q:'What is the IUPAC name of propionaldehyde?', choices:['Ethanal','Butanal','Propanal','Propanone'], correct:2},
+  {q:'What is the simplest aromatic aldehyde?', choices:['Acetophenone','Benzaldehyde','Benzophenone','Salicylaldehyde'], correct:1},
+  {q:'Salicylaldehyde is also known as:', choices:['p-Hydroxybenzaldehyde','m-Hydroxybenzaldehyde','o-Hydroxybenzaldehyde','Phenylacetaldehyde'], correct:2},
+  {q:'Phenylacetaldehyde is also called:', choices:['Benzaldehyde','Phenylethanal','Acetophenone','Toluic aldehyde'], correct:1},
+  {q:'The IUPAC name of methyl ethyl ketone is:', choices:['Propanone','Butanone','Pentanone','Butanal'], correct:1},
+  {q:'Acetophenone is a ketone in which the carbonyl group connects:', choices:['Two phenyl groups','A phenyl group and a methyl group','Two methyl groups','A methyl and an ethyl group'], correct:1},
+  {q:'Benzophenone is best described as:', choices:['A methyl phenyl ketone','A diphenyl ketone','An aliphatic ketone','A cyclic ketone'], correct:1},
+  {q:'The Reimer–Tiemann synthesis introduces an aldehyde group into:', choices:['An aliphatic chain','A phenolic (aromatic) ring','An alkyne','An amine'], correct:1},
+  {q:'Aliphatic ketones are most readily prepared from:', choices:['Primary alcohols','Secondary alcohols','Tertiary alcohols','Carboxylic acids'], correct:1},
+  {q:'Aromatic ketones with the carbonyl directly on a benzene ring are conveniently prepared by:', choices:['Cannizzaro reaction','Friedel–Crafts acylation','Aldol condensation','Claisen condensation'], correct:1},
+  {q:'Chloral is another name for:', choices:['Trichloroacetaldehyde','Trichloroacetone','Chloroacetic acid','Dichloroacetaldehyde'], correct:0},
+  {q:'The reactive intermediate formed in step 1 of Friedel–Crafts acylation is:', choices:['A carbanion','An acylium ion','An enolate','A Grignard reagent'], correct:1},
+  {q:'To make an organocadmium compound, a Grignard reagent is treated with:', choices:['AlCl3','Dry CdCl2','HCN','PCC'], correct:1},
+  {q:'Oxidation of menthol with K2Cr2O7/H2SO4 gives:', choices:['Menthone hydrate','2-Isopropyl-5-methylcyclohexan-1-one','Isopropylcyclohexanol','Menthyl chromate'], correct:1},
+  {q:'In the general structure of an aldehyde, the carbonyl carbon is always attached to at least one:', choices:['Halogen atom','Hydrogen atom','Nitrogen atom','Second alkyl group'], correct:1},
+  {q:'In a ketone, both groups attached to the carbonyl carbon must be:', choices:['Halogens','Hydrogen atoms','Hydrocarbon (alkyl or aryl) groups','Hydroxyl groups'], correct:2}
 ];
+
+const quizDataMedium = [
+  {q:'Oxidizing 1-butanol (bp 118°C) with PCC gives a product whose boiling point is closest to:', choices:['118°C','76°C','56°C','150°C'], correct:1},
+  {q:'K2Cr2O7/H2SO4 oxidation of menthol gives:', choices:['2-Isopropyl-5-methylcyclohexan-1-one','A racemic menthone mixture only','2-Isopropylcyclohexanol','Menthyl chromate ester'], correct:0},
+  {q:'Benzene + CH3COCl/AlCl3 gives:', choices:['Benzaldehyde','Acetophenone','Benzophenone','Toluene'], correct:1},
+  {q:'1-Octyne + H⁺/H2O/Hg²⁺ gives:', choices:['1-Octanol','Octanal','2-Octanone','Octanoic acid'], correct:2},
+  {q:'p-Nitrobenzoyl chloride + dimethylcadmium gives:', choices:['p-Nitrotoluene','p-Nitroacetophenone','p-Nitrobenzoic acid','p-Nitrobenzyl alcohol'], correct:1},
+  {q:'Why do Grignard reagents typically give tertiary alcohols (not ketones) with acid chlorides?', choices:['No reaction occurs','The ketone formed reacts further with more Grignard reagent','Acid chlorides are unreactive','Only aldehydes react with Grignard reagents'], correct:1},
+  {q:'Acetaldehyde + HCN/KOH gives:', choices:['Acetone cyanohydrin','2-Hydroxypropanenitrile','2-Hydroxy-2-methylpropanenitrile','Mandelonitrile'], correct:1},
+  {q:'Acetone + HCN/KOH gives:', choices:['2-Hydroxypropanenitrile','2-Hydroxy-2-methylpropanenitrile','1-Hydroxycyclohexane-1-carbonitrile','Benzaldehyde cyanohydrin'], correct:1},
+  {q:'Cyclohexanone + HCN/KOH gives:', choices:['2-Hydroxy-2-methylpropanenitrile','1-Hydroxycyclohexane-1-carbonitrile','2-Hydroxypropanenitrile','Benzaldehyde cyanohydrin'], correct:1},
+  {q:'Benzaldehyde + HCN/KOH gives:', choices:['Acetaldehyde cyanohydrin','Acetone cyanohydrin','2-Hydroxy-2-phenylacetonitrile','Cyclohexanone cyanohydrin'], correct:2},
+  {q:'Cannizzaro reaction of 4-nitrobenzaldehyde with 50% NaOH gives which pair of products?', choices:['4-Nitrobenzoic acid + water','4-Nitrobenzyl alcohol + sodium 4-nitrobenzoate','4-Nitrotoluene + NaOH','4-Aminobenzaldehyde + H2'], correct:1},
+  {q:'Two molecules of acetaldehyde with catalytic OH⁻ give:', choices:['Acetic acid','3-Hydroxybutanal','Ethanol','Ethylene glycol'], correct:1},
+  {q:'Two molecules of ethyl acetate with NaOEt give (besides ethanol):', choices:['Ethyl acetoacetate','Acetic acid','Diethyl ether','Acetaldehyde'], correct:0},
+  {q:'Benzaldehyde + 2 ethanol/dry HCl gives:', choices:['Benzaldehyde hydrate','Benzaldehyde diethyl acetal','Benzoic acid','Benzyl alcohol'], correct:1},
+  {q:'Acetone + ethylene glycol/H⁺ gives:', choices:['Acetone hydrate','A cyclic acetal + water','Acetone hemiacetal','Acetone hydrazone'], correct:1},
+  {q:'5-Hydroxypentanal cyclizes intramolecularly to form:', choices:['An open-chain hydrate','A six-membered ring hemiacetal','An acetal','A cyanohydrin'], correct:1},
+  {q:'In glucose\'s cyclization to β-D-glucopyranose, which hydroxyl attacks the aldehyde carbon?', choices:['C-2-OH','C-3-OH','C-5-OH','C-6-OH'], correct:2},
+  {q:'Acetone + hydrazine gives:', choices:['Acetone oxime','Acetone hydrazone','Acetone semicarbazone','Acetone phenylhydrazone'], correct:1},
+  {q:'Benzaldehyde + phenylhydrazine gives:', choices:['Benzaldehyde oxime','Benzaldehyde phenylhydrazone','Benzaldehyde semicarbazone','Benzaldehyde hydrazone'], correct:1},
+  {q:'Propan-2-one + 2,4-dinitrophenylhydrazine gives:', choices:['Acetone oxime','Acetone semicarbazone','Acetone-2,4-dinitrophenylhydrazone','Acetone hydrazone'], correct:2},
+  {q:'Ethanal + hydroxylamine gives:', choices:['Ethanal hydrazone','Ethanal oxime','Ethanal semicarbazone','Ethanal acetal'], correct:1},
+  {q:'Cyclopentanone + semicarbazide gives:', choices:['Cyclopentanone oxime','Cyclopentanone hydrazone','Cyclopentanone semicarbazone','Cyclopentanone phenylhydrazone'], correct:2},
+  {q:'3-Pentanone + phenylhydrazine gives:', choices:['Diethyl ketone oxime','Diethyl ketone phenylhydrazone','Diethyl ketone semicarbazone','Diethyl ketone hydrazone'], correct:1},
+  {q:'Why is formaldehyde\'s hydrate unusually stable/isolable?', choices:['It has no carbonyl group','Its small size and lack of electron-donating groups favor the hydrate','It is aromatic','It cannot react with water'], correct:1},
+  {q:'Why is chloral hydrate stable?', choices:['Chlorine atoms donate electrons to the carbonyl carbon','Electron-withdrawing chlorines increase electrophilicity of the carbonyl carbon','It has no carbonyl group','It is a ketone'], correct:1},
+  {q:'What hybridization change occurs at the carbonyl carbon during nucleophilic addition?', choices:['sp to sp2','sp2 to sp3','sp3 to sp2','No change'], correct:1},
+  {q:'Protonating the carbonyl oxygen under acid catalysis converts the carbon into:', choices:['A carbanion','A resonance-stabilized carbocation','A radical','A leaving group'], correct:1},
+  {q:'Why must organocadmium R′ groups be limited to aryl or primary alkyl?', choices:['They are the only reactive types','Other organocadmium types are too unstable to use','AlCl3 requires it','Secondary alkyl groups do not exist'], correct:1},
+  {q:'The organocadmium reaction that produces a γ-keto ester gives which specific product?', choices:['Methyl 4-oxo-7-methyloctanoate','Ethyl acetoacetate','Methyl octanoate','Dimethylcadmium'], correct:0},
+  {q:'Ethylmagnesium bromide + formaldehyde, then H3O⁺, gives:', choices:['Ethanol','1-Propanol','2-Butanol','2-Methyl-2-butanol'], correct:1},
+  {q:'Ethylmagnesium bromide + acetaldehyde, then H3O⁺, gives:', choices:['1-Propanol','2-Butanol','2-Methyl-2-butanol','1-Butanol'], correct:1},
+  {q:'Ethylmagnesium bromide + acetone, then H3O⁺, gives:', choices:['1-Propanol','2-Butanol','2-Methyl-2-butanol','2-Pentanol'], correct:2},
+  {q:'Tollens\' reagent is chemically best described as:', choices:['Silver nitrate solution','The diammine silver(I) complex ion in base','Silver oxide','A silver chloride precipitate'], correct:1},
+  {q:'Besides the silver mirror, Tollens\' reaction of RCHO produces:', choices:['RCOOH, NH3, H2','RCOO⁻, NH3, H2O','RCH2OH, Ag2O','ROH, HCl'], correct:1},
+  {q:'Why can ketones not give a positive Tollens\' test?', choices:['They are insoluble in water','They lack a carbonyl hydrogen needed for oxidation','They react too fast','They reduce silver too fast'], correct:1},
+  {q:'In IUPAC/common name correspondence for aldehydes, C-2 corresponds to which Greek letter?', choices:['Alpha','Beta','Gamma','Delta'], correct:0},
+  {q:'α-Methylvaleraldehyde corresponds to which IUPAC name?', choices:['2-Methylpentanal','3-Methylpentanal','4-Methylpentanal','Pentanal'], correct:0},
+  {q:'γ-Methylvaleraldehyde (isocaproaldehyde) corresponds to which IUPAC name?', choices:['2-Methylpentanal','3-Methylpentanal','4-Methylpentanal','5-Methylpentanal'], correct:2},
+  {q:'"3-Nitro-4′-methylbenzophenone" indicates substituents on:', choices:['The same ring','Two different aryl rings of the diaryl ketone','The carbonyl carbon itself','An aliphatic chain'], correct:1},
+  {q:'Why do aliphatic ketones need a matching secondary alcohol for direct oxidative synthesis, while complex ones need another method?', choices:['Oxidation only works on primary alcohols','A suitable 2° alcohol precursor may not be available for complicated ketones','Ketones cannot be made from alcohols','Secondary alcohols do not oxidize'], correct:1},
+  {q:'Why is nucleophilic addition (not substitution) typical of aldehyde/ketone carbonyls, unlike acid chlorides?', choices:['Aldehydes have no carbonyl group','There is no good leaving group on the carbonyl carbon of an aldehyde or ketone','Ketones are unreactive','Acid chlorides lack electrophilic carbons'], correct:1},
+  {q:'What makes alpha-hydrogens of carbonyl compounds acidic enough for base to remove?', choices:['They are bonded to oxygen','The resulting carbanion is stabilized by resonance with the carbonyl group','They are bonded to nitrogen','Carbonyl groups are basic'], correct:1},
+  {q:'Why does the Claisen condensation require a stoichiometric (not merely catalytic) amount of alkoxide base?', choices:['Esters do not react with catalytic base','The final deprotonation of the acidic β-ketoester product consumes a full equivalent of base, driving completion','Alkoxide is a byproduct only','Esters are insoluble in catalytic base'], correct:1},
+  {q:'2-Isopropyl-5-methylcyclohexan-1-one is prepared from menthol using which oxidant system?', choices:['PCC','K2Cr2O7 and H2SO4','Ag(NH3)2⁺','HCN and KOH'], correct:1},
+  {q:'In the Claisen mechanism, what species is expelled when the tetrahedral intermediate collapses?', choices:['Water','Ethoxide ion','Hydroxide ion','Chloride ion'], correct:1},
+  {q:'In the aldol mechanism, what regenerates hydroxide ion in the final step?', choices:['The enolate anion','Protonation of the alkoxide intermediate by water','Loss of water from the aldol','Oxidation of the aldehyde'], correct:1},
+  {q:'What kind of intermediate forms when hydrazine first adds to a carbonyl group, before water is eliminated?', choices:['An enolate','A carbinolamine (aminol) with OH and NHX on the same carbon','An acylium ion','A Grignard adduct'], correct:1},
+  {q:'Carbonyl + hydrazine/hydroxylamine/amine reactions, proceeding by addition then loss of water, are classified as:', choices:['Simple substitution','Addition–elimination (condensation)','Oxidation–reduction','Friedel–Crafts reactions'], correct:1},
+  {q:'Which of these is a Lewis-acid catalyst rather than a hydride reducing agent, per the source?', choices:['LiAlH4','NaBH4','AlCl3','Both LiAlH4 and NaBH4'], correct:2},
+  {q:'Which functional group results from carbonyl + ammonia or a 1° amine, according to the source?', choices:['Acetal','Imine (Schiff base)','Hemiacetal','Hydrazone'], correct:1}
+];
+
+const quizDataHard = [
+  {q:'Which best describes the correct sequence of intermediates in Friedel–Crafts acylation?', choices:['Arenium ion → acylium ion → product','Acylium ion → arenium ion → product','Carbanion → oxocarbenium → product','Enolate → tetrahedral intermediate → product'], correct:1},
+  {q:'Why does Friedel–Crafts acylation resist carbocation rearrangement, unlike Friedel–Crafts alkylation?', choices:['The acylium ion is resonance-stabilized by the adjacent oxygen and doesn\'t need to rearrange','Acylation uses no cationic intermediate','Alkylation never forms carbocations','Acyl groups are never electrophilic'], correct:0},
+  {q:'Grignard reagents react further with an in-situ ketone (from an acid chloride) to give tertiary alcohols mainly because:', choices:['Grignard reagents are highly nucleophilic/basic and readily add a second time to the still-electrophilic ketone','The ketone is not electrophilic','Acid chlorides are unreactive','Organocadmium is more reactive than Grignard reagents'], correct:0},
+  {q:'Organocadmium compounds stop at the ketone stage (unlike Grignard reagents) mainly because:', choices:['They are less nucleophilic, so they react once with the acid chloride but not again with the less-electrophilic ketone','They are stronger nucleophiles than Grignard reagents','Ketones are unreactive toward all nucleophiles','Cadmium poisons the ketone'], correct:0},
+  {q:'In the 5-step Claisen condensation mechanism, which step is essentially irreversible and drives the equilibrium to completion?', choices:['Step 1 (enolate formation)','Step 2 (nucleophilic addition)','Step 4 (deprotonation of the acidic β-ketoester product)','Step 5 (acid workup)'], correct:2},
+  {q:'Why is step 4 of the Claisen mechanism essentially irreversible under the reaction conditions?', choices:['The β-ketoester\'s alpha-hydrogen is far more acidic than ethanol, so the equilibrium lies overwhelmingly toward its conjugate base','Ethoxide is a weak base','Water is present','The ester enolate is unstable'], correct:0},
+  {q:'In the aldol condensation mechanism, the species that attacks the carbonyl carbon of the second (un-ionized) aldehyde molecule is:', choices:['Hydroxide ion','The enolate anion of the first aldehyde molecule','A proton','The alkoxide product'], correct:1},
+  {q:'Why does an aldol condensation always leave exactly one carbon between the original carbonyl carbon and the new hydroxyl-bearing carbon, regardless of chain length?', choices:['Because only the alpha-carbon can act as the nucleophile','Because water always adds first','Because the base only removes beta-hydrogens','Because ketones react differently from aldehydes'], correct:0},
+  {q:'The Cannizzaro reaction of an aldehyde lacking alpha-hydrogens proceeds by:', choices:['Aldol condensation followed by oxidation','Intermolecular hydride transfer between two carbonyl molecules after hydroxide addition to one of them','A Grignard-type addition','Friedel–Crafts acylation'], correct:1},
+  {q:'Why can\'t an aldehyde with an alpha-hydrogen undergo a clean Cannizzaro reaction?', choices:['It is too reactive toward Tollens\' reagent','Base preferentially deprotonates the acidic alpha-hydrogen, favoring aldol condensation instead','It cannot form a carbanion','It lacks a carbonyl group'], correct:1},
+  {q:'LiAlH4 and NaBH4 give the same alcohol product from a given carbonyl compound because:', choices:['Both are equally reactive with all functional groups','Both deliver a hydride ion to the same electrophilic carbonyl carbon','Both are oxidizing agents','Both form the same organometallic intermediate as Grignard reagents'], correct:1},
+  {q:'The thermodynamic driving force for Grignard addition to a carbonyl group, in acid–base terms, is best described as:', choices:['Conversion of a weak acid to a strong acid','Conversion of a strong base (carbanion) into a much weaker base (alkoxide)','No net acid–base change occurs','Conversion of an alkoxide into a carbanion'], correct:1},
+  {q:'Converting a hemiacetal into an acetal under acid catalysis proceeds through which key reactive intermediate?', choices:['An acylium ion','A resonance-stabilized oxocarbenium ion formed by loss of water from the protonated hemiacetal','An enolate anion','A Grignard-type carbanion'], correct:1},
+  {q:'The intramolecular formation of β-D-glucopyranose from open-chain glucose is best classified mechanistically as:', choices:['An intermolecular Cannizzaro reaction','An intramolecular nucleophilic addition of a hydroxyl oxygen to the aldehyde carbon','A Claisen condensation','A Friedel–Crafts acylation'], correct:1},
+  {q:'Carbonyl condensations with hydrazine, hydroxylamine, and primary amines all proceed by which general two-stage mechanism?', choices:['Substitution then elimination','Nucleophilic addition (forming a carbinolamine) followed by elimination of water','Oxidation followed by reduction','Radical addition then termination'], correct:1},
+  {q:'These addition–elimination condensations go essentially to completion, unlike simple carbonyl hydration, mainly because:', choices:['Nitrogen is more electronegative than oxygen','The resulting C=N pi bond is comparably stable to the original C=O, making water loss favorable, whereas hydrate formation has no such stabilized elimination product','Water cannot act as a nucleophile','Nitrogen compounds are always more soluble'], correct:1},
+  {q:'Aldehydes are generally more reactive than ketones toward nucleophilic addition due to:', choices:['Aldehydes have a full negative charge on oxygen while ketones do not','Ketones\' two electron-donating alkyl/aryl groups sterically and electronically deactivate the carbonyl carbon compared with an aldehyde\'s single such group','Ketones lack a carbonyl group','Aldehydes are always aromatic'], correct:1},
+  {q:'Ketones are "oxidized only with difficulty" relative to aldehydes chiefly because:', choices:['Ketones are more polar','Oxidizing a ketone would require breaking a C–C bond, since there is no carbonyl C–H to remove','Ketones do not have a carbonyl group','Ketones react faster with Tollens\' reagent'], correct:1},
+  {q:'The organocadmium reagent reacts with an acid chloride (rather than accumulating as a stable tetrahedral adduct) because:', choices:['The acid chloride\'s leaving group (Cl⁻) allows a clean nucleophilic acyl substitution that regenerates a carbonyl','Cadmium is unreactive','Acid chlorides have no electrophilic carbon','Organocadmium compounds are electrophiles'], correct:0},
+  {q:'Given "methyl 4-oxo-7-methyloctanoate," which two functional groups must both be present?', choices:['An ester and an alcohol','A ketone and a methyl ester','An aldehyde and a carboxylic acid','An amide and a ketone'], correct:1},
+  {q:'In aldol and Claisen condensations, what determines whether the tetrahedral intermediate is simply protonated (aldol) or collapses with loss of a leaving group (Claisen)?', choices:['The presence of an alpha-hydrogen','Whether the attacked carbonyl compound has a leaving group on its carbonyl carbon (an ester\'s OR vs. an aldehyde/ketone\'s lack of one)','The identity of the base used','The temperature of the reaction'], correct:1},
+  {q:'Chloral hydrate\'s unusual stability (compared with most aldehyde hydrates) is best explained by:', choices:['Resonance stabilization of the carbonyl by chlorine lone pairs','The inductive electron-withdrawal of three chlorine atoms, which increases the electrophilicity of the carbonyl carbon and favors the hydrate','Chlorine\'s ability to hydrogen-bond','The aromatic character of chloral'], correct:1},
+  {q:'During nucleophilic addition to a carbonyl compound, the carbonyl carbon\'s hybridization and geometry change from:', choices:['sp3/tetrahedral to sp2/trigonal','sp2/trigonal to sp3/tetrahedral','sp/linear to sp2/trigonal','No change occurs'], correct:1},
+  {q:'Acid catalysis accelerates nucleophilic addition of weak nucleophiles because protonation of the carbonyl oxygen:', choices:['Removes the electrophilic carbon entirely','Generates a resonance-stabilized carbocation at carbon, making it a much stronger electrophile','Converts the carbonyl into a carboxylic acid','Deactivates the nucleophile'], correct:1},
+  {q:'Acid/Hg²⁺-catalyzed hydration of a terminal alkyne gives a methyl ketone rather than an aldehyde because:', choices:['Markovnikov addition places the OH on the more-substituted internal carbon, and the resulting enol tautomerizes to the more stable ketone','Mercury blocks the terminal carbon irreversibly','Aldehydes cannot form from alkynes','Hydration is anti-Markovnikov here'], correct:0},
+  {q:'Ranking formaldehyde, acetaldehyde, and acetone by reactivity toward nucleophilic addition (most to least reactive) gives:', choices:['Acetone > acetaldehyde > formaldehyde','Formaldehyde > acetaldehyde > acetone','Acetaldehyde > formaldehyde > acetone','All three are equally reactive'], correct:1},
+  {q:'α-Methylvaleraldehyde and γ-methylvaleraldehyde differ in IUPAC numbering because:', choices:['They are entirely different functional groups','The methyl substituent sits on the alpha (C-2) carbon in one and the gamma (C-4) carbon in the other','One is aromatic and one is aliphatic','They have different molecular formulas'], correct:1},
+  {q:'The chemical basis of the Tollens\' silver mirror test being positive for aldehydes but negative for ketones is:', choices:['Ketones are insoluble in ammoniacal silver solution','Aldehydes possess a carbonyl C–H that can be oxidized (reducing Ag⁺ to Ag⁰), while ketones lack this hydrogen','Aldehydes are always more polar','Silver only reacts with hydroxyl groups'], correct:1},
+  {q:'For synthesizing a fully aliphatic, unsymmetrical dialkyl ketone too complex to obtain from a single secondary alcohol, the method in the source is:', choices:['Friedel–Crafts acylation','The organocadmium route, using a Grignard/CdCl2-derived organocadmium reagent plus the appropriate acid chloride','Cannizzaro reaction','Reimer–Tiemann synthesis'], correct:1},
+  {q:'Organocadmium reagents are restricted to aryl or primary alkyl groups because:', choices:['Secondary/tertiary alkylcadmium compounds are too unstable to survive to react cleanly with the acid chloride','Aryl groups react fastest','Primary alkyl groups are the only nucleophiles','CdCl2 does not react with secondary Grignard reagents'], correct:0},
+  {q:'The tetrahedral intermediate formed when an ester enolate adds to a neutral ester (Claisen step 2) is anionic because:', choices:['The neutral ester carbonyl already carried a negative charge','The attacking nucleophile (the ester enolate) was itself an anion, and that charge is retained on the new alkoxide oxygen','Water is lost in this step','The ester\'s OR group becomes negatively charged'], correct:1},
+  {q:'The alpha-hydrogen of a β-ketoester (the Claisen product) is far more acidic than that of the starting ester because:', choices:['It is bonded to two oxygens directly','The resulting carbanion is stabilized by resonance delocalization into two flanking carbonyl groups instead of just one','Esters have no alpha-hydrogens','It is bonded to nitrogen'], correct:1},
+  {q:'Both the aldol and Claisen condensations begin with the same type of mechanistic step; that step is:', choices:['Nucleophilic substitution at a leaving group','Base-mediated removal of an acidic alpha-hydrogen to generate a resonance-stabilized enolate','Protonation of the carbonyl oxygen','Addition of water to the carbonyl'], correct:1},
+  {q:'The key mechanistic difference between how aldehydes/ketones react with Grignard reagents versus how esters/acid chlorides react with them is:', choices:['Aldehydes/ketones do not react with Grignard reagents at all','The tetrahedral alkoxide from an aldehyde/ketone has no leaving group and is simply protonated, while esters/acid chlorides have a leaving group so the intermediate collapses and can react again','Esters are unreactive toward nucleophiles','Grignard reagents only add to aromatic rings'], correct:1},
+  {q:'The class of reaction linking hydrazone, oxime, semicarbazone, and imine formation, as distinct from hemiacetal/acetal formation, is that the former:', choices:['Are simple additions with no further step','Are addition–elimination reactions ending in a stable C=N bond, unlike additions (hemiacetal) or substitutions (acetal) that form no C=N','Require no nucleophile','Only occur with ketones, never aldehydes'], correct:1},
+  {q:'Given the resonance description of the carbonyl group, the site attacked by a nucleophile and the site protonated by an acid are, respectively:', choices:['Oxygen and carbon','Carbon (bearing partial/full positive charge) and oxygen (bearing partial/full negative charge and lone pairs)','Both are the same site','Neither site is chemically distinguishable'], correct:1},
+  {q:'To introduce an aldehyde group onto a ring that already bears a phenolic OH, which named reaction from the source is specifically suited?', choices:['Friedel–Crafts acylation','Reimer–Tiemann synthesis','Cannizzaro reaction','Claisen condensation'], correct:1},
+  {q:'Formaldehyde\'s hydrate is unusually stable and isolable (unlike most gem-diols) mainly because:', choices:['Formaldehyde is aromatic','Formaldehyde\'s small size and lack of electron-donating substituents leave its carbonyl carbon highly electrophilic, favoring the hydrate at equilibrium','Formaldehyde cannot react with water','Formaldehyde has no carbonyl group'], correct:1},
+  {q:'The single structural feature (an H atom directly on the carbonyl carbon of aldehydes) is responsible for BOTH their greater ease of oxidation AND a positive Tollens\' test because:', choices:['It allows two alkyl groups to donate electrons','It is the very carbonyl C–H bond that ketones, lacking it entirely, cannot offer for oxidation','It makes aldehydes aromatic','It changes the boiling point'], correct:1},
+  {q:'Why does acid-catalyzed hemiacetal-to-acetal conversion require a second equivalent of alcohol as a nucleophile?', choices:['Because the oxocarbenium ion generated after loss of water from the hemiacetal must be captured by a new alcohol nucleophile to form the second C–O bond of the acetal','Because two equivalents are always required for any nucleophilic addition','Because water can act as the second nucleophile instead','Because acetals contain three oxygen atoms'], correct:0}
+];
+
+const quizLevels = {easy:quizDataEasy, medium:quizDataMedium, hard:quizDataHard};
+let quizLevel = 'easy';
+let quizData = quizLevels[quizLevel];
 
 let quizAnswered = 0;
 let quizCorrect = 0;
@@ -1015,6 +1269,15 @@ function buildQuiz(){
     list.appendChild(card);
   });
 }
+document.querySelectorAll('[data-group="quizLevel"] .toggle-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('[data-group="quizLevel"] .toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    quizLevel = btn.dataset.level;
+    quizData = quizLevels[quizLevel];
+    buildQuiz();
+  });
+});
 document.getElementById('quizRestart').addEventListener('click', buildQuiz);
 document.getElementById('quizRestart2').addEventListener('click', ()=>{buildQuiz(); document.getElementById('quiz').scrollIntoView({behavior:'smooth'});});
 buildQuiz();
